@@ -1,35 +1,38 @@
+import { ATA, MSW } from './constants';
+
 // calculates the pressure of a tissue compartment
 // given an initial pressure 
 
-const ATA = 1.01972;
-
-const absolutePressureAtDepth = depth =>
-  (depth / 10) + ATA;
+// absolute pressure at depth
+const absolutePressure = depth =>
+  (depth * MSW) + ATA;
 
 // using the "Schreiner" equation
+// returns the tissue pressure after the dive interval
 const tissuePressure = (
-  beginningAlviolarPressure, // bar
-  beginningTissuePressure, // bar
-  gasRatio, // ex: 0.79
+  startAlviolarPressure, // bar
+  startTissuePressure, // bar
+  gasRatio, // 0 - 1, ex: .79
   startDepth, // meters
   endDepth, // meters
   intervalTime, // minutes
-  halfTime, // ex: 1.51 (minutes)
+  halfTime, // minutes
 ) => {
   // the "k" in the schreiner equation
   const k = Math.LN2 / halfTime;
 
   // meters / minute
   const rateOfPressureChange = 
-    (absolutePressureAtDepth(endDepth) - absolutePressureAtDepth(startDepth)) / intervalTime;
+    (absolutePressure(endDepth) - absolutePressure(startDepth))
+    / intervalTime;
 
   // "R" in the schreiner equation
-  const r = rateOfPressureChange * gasRatio;
+  const R = rateOfPressureChange * gasRatio;
 
   // P = Pio + R(t - 1/k) - [Pio - Po - (R/k)]e^-kt
-  return beginningAlviolarPressure
-    + (r * (intervalTime - 1/k))
-    - (beginningAlviolarPressure - beginningTissuePressure - r/k)
+  return startAlviolarPressure
+    + R * (intervalTime - 1/k)
+    - (startAlviolarPressure - startTissuePressure - R/k)
     * Math.exp(-k * intervalTime);
 }
 

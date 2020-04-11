@@ -1,4 +1,4 @@
-import alveolarGasPressure from '../alveolarGasPressure';
+import alveolarGasPressure from '../alveolarPressure';
 import tissuePressure from '../tissuePressure';
 import ZH_L16B from '../ZH-L16B';
 
