@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,13 @@
   "bugs": {
     "url": "https://github.com/vkmita/dive-computer/issues"
   },
-  "homepage": "https://github.com/vkmita/dive-computer#readme"
+  "homepage": "https://github.com/vkmita/dive-computer#readme",
+  "devDependencies": {
+    "babel-jest": "^25.3.0",
+    "jest": "^25.3.0"
+  },
+  "dependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5"
+  }
 }
