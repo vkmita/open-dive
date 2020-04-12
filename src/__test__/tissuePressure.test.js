@@ -1,8 +1,8 @@
-import alveolarGasPressure from '../alveolarPressure';
-import tissuePressure from '../tissuePressure';
-import ZH_L16B from '../ZH-L16B';
+import alveolarGasPressure from "../alveolarPressure";
+import tissuePressure from "../tissuePressure";
+import ZH_L16B from "../ZH-L16B";
 
-test('tissuePressure', () => {
+test("tissuePressure", () => {
   const gasRatio = 0.45;
   const startAlviolarPressure = alveolarGasPressure(1, gasRatio);
   const startTissuePressure = 0;
@@ -19,8 +19,8 @@ test('tissuePressure', () => {
     startDepth,
     endDepth,
     intervalTime,
-    halfTime,
+    halfTime
   );
 
   console.log(endTissuePressure);
-})
+});

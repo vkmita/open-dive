@@ -1,10 +1,10 @@
 export default {
-  1: { 
-    n2: { halfTime: 4.0, a: 1.2599, b: 0.5240 }, 
-    he: { halfTime: 1.51, a: 1.7424, b: 0.4245 }, 
+  1: {
+    n2: { halfTime: 4.0, a: 1.2599, b: 0.524 },
+    he: { halfTime: 1.51, a: 1.7424, b: 0.4245 },
   },
-  '1b': {
-    n2: { halfTime: 5.0, a: 1.1696, b: 0.5578 }, 
+  "1b": {
+    n2: { halfTime: 5.0, a: 1.1696, b: 0.5578 },
     he: { halfTime: 1.88, a: 1.6189, b: 0.477 },
   },
   2: {
@@ -37,7 +37,7 @@ export default {
   },
   9: {
     n2: { halfTime: 109.0, a: 0.4049, b: 0.9092 },
-    he: { halfTime: 41.20, a: 0.595, b: 0.8757 },
+    he: { halfTime: 41.2, a: 0.595, b: 0.8757 },
   },
   10: {
     n2: { halfTime: 146.0, a: 0.3719, b: 0.9222 },
@@ -67,4 +67,4 @@ export default {
     n2: { halfTime: 635.0, a: 0.2327, b: 0.9653 },
     he: { halfTime: 240.03, a: 0.5119, b: 0.9267 },
   },
-}
+};

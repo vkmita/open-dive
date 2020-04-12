@@ -10,7 +10,7 @@ const RESPIRATORY_QUOTIENT = 0.9;
 const ATA = 1.01325;
 
 // U.S. Navy and the Journal of Underseaand Hyperbaric Medicine standard
-// bar per meter sea water 
+// bar per meter sea water
 // 3.28084 / 33.08
 const MSW = 0.09917896009;
 
@@ -26,8 +26,8 @@ const MAX_ASCENT_RATE = 10;
 export {
   ALVEOLAR_C02_PRESSURE,
   ALVEOLAR_WATER_VAPOR_PRESSURE,
-  ATA, 
-  MAX_ASCENT_RATE, 
-  MSW, 
-  RESPIRATORY_QUOTIENT, 
+  ATA,
+  MAX_ASCENT_RATE,
+  MSW,
+  RESPIRATORY_QUOTIENT,
 };
