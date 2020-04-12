@@ -1,3 +1,5 @@
+import { ATA, MSW } from './constants';
+
 // absolute pressure (bar) at depth (meters)
 const absolutePressure = depth =>
   (depth * MSW) + ATA;

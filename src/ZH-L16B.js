@@ -1,21 +1,72 @@
-const ZH_L16B = [
-  { n2HalfTime: 4.0, n2A: 1.2599, n2B: 0.5240, heHalfTime: 1.51, heA: 1.7424, heB: 0.4245 },
-  { n2HalfTime: 5.0, n2A: 1.1696, n2B: 0.5578, heHalfTime: 1.88, heA: 1.6189, heB: 0.477 },
-  { n2HalfTime: 8.0, n2A: 1.0, n2B: 0.6514, heHalfTime: 3.02, heA: 1.383, heB: 0.5747 },
-  { n2HalfTime: 12.5, n2A: 0.8618, n2B: 0.7222, heHalfTime: 4.72, heA: 1.1919, heB: 0.6527 },
-  { n2HalfTime: 18.5, n2A: 0.7562, n2B: 0.7825, heHalfTime: 6.99, heA: 1.0458, heB: 0.7223 },
-  { n2HalfTime: 27.0, n2A: 0.6491, n2B: 0.8126, heHalfTime: 10.21, heA: 0.922, heB: 0.7582 },
-  { n2HalfTime: 38.3, n2A: 0.5316, n2B: 0.8434, heHalfTime: 14.48, heA: 0.8205, heB: 0.7957 },
-  { n2HalfTime: 54.3, n2A: 0.4681, n2B: 0.8693, heHalfTime: 20.53, heA: 0.7305, heB: 0.8279 },
-  { n2HalfTime: 77.0, n2A: 0.4301, n2B: 0.891, heHalfTime: 29.11, heA: 0.6502, heB: 0.8553 },
-  { n2HalfTime: 109.0, n2A: 0.4049, n2B: 0.9092, heHalfTime: 41.20, heA: 0.595, heB: 0.8757 },
-  { n2HalfTime: 146.0, n2A: 0.3719, n2B: 0.9222, heHalfTime: 55.19, heA: 0.5545, heB: 0.8903 },
-  { n2HalfTime: 187.0, n2A: 0.3447, n2B: 0.9313, heHalfTime: 70.69, heA: 0.5333, heB: 0.8997 },
-  { n2Halftime: 239.0, n2A: 0.3176, n2B: 0.9403, heHalfTime: 90.34, heA: 0.5189, heB: 0.9073 },
-  { n2HalfTime: 305.0, n2A: 0.2828, n2B: 0.9477, heHalfTime: 115.29, heA: 0.5181, heB: 0.9122 },
-  { n2HalfTime: 390.0, n2A: 0.2716, n2B: 0.9544, heHalfTime: 147.42, heA: 0.5176, heB: 0.9171 },
-  { n2HalfTime: 498.0, n2A: 0.2523, n2B: 0.9602, heHalfTime: 188.24, heA: 0.5172, heB: 0.9217 },
-  { n2HalfTime: 635.0, n2A: 0.2327, n2B: 0.9653, heHalfTime: 240.03, heA: 0.5119, heB: 0.9267 },
-];
+const ZH_L16B = {
+  1: { 
+    n2: { halfTime: 4.0, a: 1.2599, b: 0.5240 }, 
+    he: { halfTime: 1.51, a: 1.7424, b: 0.4245 }, 
+  },
+  '1b': {
+    n2: { halfTime: 5.0, a: 1.1696, b: 0.5578 }, 
+    he: { halfTime: 1.88, a: 1.6189, b: 0.477 },
+  },
+  2: {
+    n2: { halfTime: 8.0, a: 1.0, b: 0.6514 },
+    he: { halfTime: 3.02, a: 1.383, b: 0.5747 },
+  },
+  3: {
+    n2: { halfTime: 12.5, a: 0.8618, b: 0.7222 },
+    he: { halfTime: 4.72, a: 1.1919, b: 0.6527 },
+  },
+  4: {
+    n2: { halfTime: 18.5, a: 0.7562, b: 0.7825 },
+    he: { halfTime: 6.99, a: 1.0458, b: 0.7223 },
+  },
+  5: {
+    n2: { halfTime: 27.0, a: 0.6491, b: 0.8126 },
+    he: { halfTime: 10.21, a: 0.922, b: 0.7582 },
+  },
+  6: {
+    n2: { halfTime: 38.3, a: 0.5316, b: 0.8434 },
+    he: { halfTime: 14.48, a: 0.8205, b: 0.7957 },
+  },
+  7: {
+    n2: { halfTime: 54.3, a: 0.4681, b: 0.8693 },
+    he: { halfTime: 20.53, a: 0.7305, b: 0.8279 },
+  },
+  8: {
+    n2: { halfTime: 77.0, a: 0.4301, b: 0.891 },
+    he: { halfTime: 29.11, a: 0.6502, b: 0.8553 },
+  },
+  9: {
+    n2: { halfTime: 109.0, a: 0.4049, b: 0.9092 },
+    he: { halfTime: 41.20, a: 0.595, b: 0.8757 },
+  },
+  10: {
+    n2: { halfTime: 146.0, a: 0.3719, b: 0.9222 },
+    he: { halfTime: 55.19, a: 0.5545, b: 0.8903 },
+  },
+  11: {
+    n2: { halfTime: 187.0, a: 0.3447, b: 0.9313 },
+    he: { halfTime: 70.69, a: 0.5333, b: 0.8997 },
+  },
+  12: {
+    n2: { halfTime: 239.0, a: 0.3176, b: 0.9403 },
+    he: { halfTime: 90.34, a: 0.5189, b: 0.9073 },
+  },
+  13: {
+    n2: { halfTime: 305.0, a: 0.2828, b: 0.9477 },
+    he: { halfTime: 115.29, a: 0.5181, b: 0.9122 },
+  },
+  14: {
+    n2: { halfTime: 390.0, a: 0.2716, b: 0.9544 },
+    he: { halfTime: 147.42, a: 0.5176, b: 0.9171 },
+  },
+  15: {
+    n2: { halfTime: 498.0, a: 0.2523, b: 0.9602 },
+    he: { halfTime: 188.24, a: 0.5172, b: 0.9217 },
+  },
+  16: {
+    n2: { halfTime: 635.0, a: 0.2327, b: 0.9653 },
+    he: { halfTime: 240.03, a: 0.5119, b: 0.9267 },
+  },
+}
 
 export default ZH_L16B;

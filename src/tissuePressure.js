@@ -19,8 +19,7 @@ const tissuePressure = (
 
   // meters / minute
   const rateOfPressureChange = 
-    (absolutePressure(endDepth) - absolutePressure(startDepth))
-    / intervalTime;
+    (absolutePressure(endDepth) - absolutePressure(startDepth)) / intervalTime;
 
   // "R" in the schreiner equation
   const R = rateOfPressureChange * gasRatio;
