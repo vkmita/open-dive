@@ -1,11 +1,7 @@
-import { ATA, MSW } from './constants';
+import absolutePressure from './absolutePressure';
 
 // calculates the pressure of a tissue compartment
 // given an initial pressure 
-
-// absolute pressure at depth
-const absolutePressure = depth =>
-  (depth * MSW) + ATA;
 
 // using the "Schreiner" equation
 // returns the tissue pressure after the dive interval
