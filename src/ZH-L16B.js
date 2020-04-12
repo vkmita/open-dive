@@ -1,4 +1,4 @@
-const ZH_L16B = {
+export default {
   1: { 
     n2: { halfTime: 4.0, a: 1.2599, b: 0.5240 }, 
     he: { halfTime: 1.51, a: 1.7424, b: 0.4245 }, 
@@ -68,5 +68,3 @@ const ZH_L16B = {
     he: { halfTime: 240.03, a: 0.5119, b: 0.9267 },
   },
 }
-
-export default ZH_L16B;

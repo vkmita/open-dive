@@ -1,7 +1,4 @@
 import { ATA, MSW } from './constants';
 
 // absolute pressure (bar) at depth (meters)
-const absolutePressure = depth =>
-  (depth * MSW) + ATA;
-
-export default absolutePressure;
+export default depth => (depth * MSW) + ATA;

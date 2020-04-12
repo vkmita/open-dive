@@ -7,7 +7,7 @@ import {
 // "alveolar ventilation equation"
 // calculates the partial pressure of the inert gas in the 
 // alvioli before it enters tissues
-const alveolarPressure = (ambiantPressure, gasRatio) => {
+export default (ambiantPressure, gasRatio) => {
   // gas in the alveoli not coming from the gas mix
   const alveolarGas =
     ALVEOLAR_WATER_VAPOR_PRESSURE 
@@ -16,4 +16,3 @@ const alveolarPressure = (ambiantPressure, gasRatio) => {
   return (ambiantPressure - alveolarGas) * gasRatio;
 }
   
-export default alveolarPressure;

@@ -5,7 +5,7 @@ import absolutePressure from './absolutePressure';
 
 // using the "Schreiner" equation
 // returns the tissue pressure after the dive interval
-const tissuePressure = (
+export default (
   startAlviolarPressure, // bar
   startTissuePressure, // bar
   gasRatio, // 0 - 1, ex: .79
@@ -30,5 +30,3 @@ const tissuePressure = (
     - (startAlviolarPressure - startTissuePressure - R/k)
     * Math.exp(-k * intervalTime);
 }
-
-export default tissuePressure;
