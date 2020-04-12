@@ -3,7 +3,7 @@ export default {
     n2: { halfTime: 4.0, a: 1.2599, b: 0.524 },
     he: { halfTime: 1.51, a: 1.7424, b: 0.4245 },
   },
-  "1b": {
+  '1b': {
     n2: { halfTime: 5.0, a: 1.1696, b: 0.5578 },
     he: { halfTime: 1.88, a: 1.6189, b: 0.477 },
   },

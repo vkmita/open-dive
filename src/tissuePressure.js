@@ -1,4 +1,4 @@
-import absolutePressure from "./absolutePressure";
+import absolutePressure from './absolutePressure';
 
 // calculates the pressure of a tissue compartment
 // given an initial pressure
@@ -12,7 +12,7 @@ export default (
   startDepth, // meters
   endDepth, // meters
   intervalTime, // minutes
-  halfTime // minutes
+  halfTime, // minutes
 ) => {
   // the "k" in the schreiner equation
   const k = Math.LN2 / halfTime;

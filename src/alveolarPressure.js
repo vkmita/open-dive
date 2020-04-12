@@ -2,7 +2,7 @@ import {
   ALVEOLAR_C02_PRESSURE,
   RESPIRATORY_QUOTIENT,
   ALVEOLAR_WATER_VAPOR_PRESSURE,
-} from "./constants";
+} from './constants';
 
 // "alveolar ventilation equation"
 // calculates the partial pressure of the inert gas in the
