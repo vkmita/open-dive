@@ -1,4 +1,5 @@
 import absolutePressure from './absolutePressure';
+import rateOfPressureChange from './rateOfPRessureChange';
 
 // calculates the pressure of a tissue compartment
 // given an initial pressure
@@ -18,11 +19,10 @@ export default (
   const k = Math.LN2 / halfTime;
 
   // meters / minute
-  const rateOfPressureChange =
-    (absolutePressure(endDepth) - absolutePressure(startDepth)) / intervalTime;
+  const pressureChange = rateOfPressureChange(startDepth, endDepth, intervalTime);
 
   // "R" in the schreiner equation
-  const R = rateOfPressureChange * gasRatio;
+  const R = pressureChange * gasRatio;
 
   // P = Pio + R(t - 1/k) - [Pio - Po - (R/k)]e^-kt
   return (
