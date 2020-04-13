@@ -10,7 +10,7 @@ test('tissuePressure', () => {
   const startDepth = 0;
   const endDepth = 26.7716711766;
   const intervalTime = 2;
-  const halfTime = ZH_L16B[0].heHalftime;
+  const halfTime = ZH_L16B[1].heHalftime;
 
   const endTissuePressure = tissuePressure(
     startAlviolarPressure,
