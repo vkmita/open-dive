@@ -1,4 +1,4 @@
-import absolutePressure from './absolutePressure';
+import schreiner from './equations/schreiner';
 import rateOfPressureChange from './rateOfPRessureChange';
 
 // calculates the pressure of a tissue compartment
@@ -25,10 +25,11 @@ export default (
   const R = pressureChange * gasRatio;
 
   // P = Pio + R(t - 1/k) - [Pio - Po - (R/k)]e^-kt
-  return (
-    startAlviolarPressure +
-    R * (intervalTime - 1 / k) -
-    (startAlviolarPressure - startTissuePressure - R / k) *
-      Math.exp(-k * intervalTime)
-  );
+  return schreiner({
+    pAlv: startAlviolarPressure,
+    R,
+    p0: startTissuePressure,
+    k,
+    t: intervalTime,
+  });
 };
