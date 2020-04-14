@@ -1,5 +1,5 @@
 import noStopTime from '../noStopTime';
-import ZHL16B from '../ZH-L16B';
+import ZHL16B from '../ZHL16B';
 
 test('direct decent to 40', () => {
   // direct decent to 40 meters

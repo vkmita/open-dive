@@ -1,6 +1,6 @@
 import alveolarGasPressure from '../alveolarPressure';
 import tissuePressure from '../tissuePressure';
-import ZH_L16B from '../ZH-L16B';
+import ZH_L16B from '../ZHL16B';
 
   test('helium', () => {
     const gasRatio = 0.45;
