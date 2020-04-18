@@ -12,7 +12,7 @@ import ZH_L16B from '../ZHL16B';
     const intervalTime = 2;
     const halfTime = ZH_L16B[1].he.halfTime;
 
-    const endTissuePressure = tissuePressure(
+    const endTissuePressure = tissuePressure({
       startAlviolarPressure,
       startTissuePressure,
       gasRatio,
@@ -20,7 +20,7 @@ import ZH_L16B from '../ZHL16B';
       endDepth,
       intervalTime,
       halfTime,
-    );
+    });
 
     expect(endTissuePressure).toEqual(0.6678566124762237)
   });
@@ -35,7 +35,7 @@ import ZH_L16B from '../ZHL16B';
     const intervalTime = 2;
     const halfTime = ZH_L16B[3].n2.halfTime;
 
-    const endTissuePressure = tissuePressure(
+    const endTissuePressure = tissuePressure({
       startAlviolarPressure,
       startTissuePressure,
       gasRatio,
@@ -43,7 +43,7 @@ import ZH_L16B from '../ZHL16B';
       endDepth,
       intervalTime,
       halfTime,
-    );
+    });
 
     expect(endTissuePressure).toEqual(0.912248948856579)
   });

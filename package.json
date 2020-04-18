@@ -25,7 +25,8 @@
   },
   "dependencies": {
     "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5"
+    "@babel/preset-env": "^7.9.5",
+    "lodash": "^4.17.15"
   },
   "husky": {
     "hooks": {

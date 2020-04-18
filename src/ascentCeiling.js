@@ -5,4 +5,4 @@ const ascentCeiling = (tissuePressure, compartment) => {
   return ascentPressureLimit
 };
 
-export default ascentCeiling
+export default ascentCeiling;

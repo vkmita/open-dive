@@ -1,12 +1,12 @@
 import schreiner from './equations/schreiner';
-import rateOfPressureChange from './rateOfPRessureChange';
+import rateOfPressureChange from './rateOfPressureChange';
 
 // calculates the pressure of a tissue compartment
 // given an initial pressure
 
 // using the "Schreiner" equation
 // returns the tissue pressure after the dive interval
-export default (
+export default ({
   startAlviolarPressure, // bar
   startTissuePressure, // bar
   gasRatio, // 0 - 1, ex: .79
@@ -14,7 +14,7 @@ export default (
   endDepth, // meters
   intervalTime, // minutes
   halfTime, // minutes
-) => {
+}) => {
   // the "k" in the schreiner equation
   const k = Math.LN2 / halfTime;
 

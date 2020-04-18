@@ -3,7 +3,7 @@
 // Schreiner 0.8
 // US Navy   0.9
 // Buhlmann  1.0
-// schreiner's RQ is the most concervative
+// schreiner's RQ is the most conservative
 const RESPIRATORY_QUOTIENT = 0.9;
 
 // American standard, average atmospheric pressure at sea level (bar)
