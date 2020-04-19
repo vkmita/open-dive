@@ -1,4 +1,4 @@
-import Dive from '../DiveClass';
+import Dive from '../Dive';
 
 test('no previous dive', () => {
   const dive = new Dive({
