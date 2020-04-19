@@ -6,15 +6,16 @@ const dive = initializeDive({
 });
 
 test('iniitializeDive', () => {
-  expect(dive.heRatio).toEqual(0);
-  expect(dive.n2Ratio).toEqual(0.79);
+  const initialSample = dive.samples[0];
+  expect(initialSample.heRatio).toEqual(0);
+  expect(initialSample.n2Ratio).toEqual(0.79);
 });
 
 test('addSample', () => {
   const nDive = addSample({
     depth: 40,
     dive,
-    time: dive.startedAt + 2 * 1000,
+    time: dive.startedAt + 2 * 60 * 1000,
   });
 
   let { samples } = dive;
@@ -45,7 +46,7 @@ test('addSample', () => {
   const mDive = addSample({
     depth: 40,
     dive: nDive,
-    time: dive.startedAt + 32 * 1000,
+    time: dive.startedAt + 32 * 60 * 1000,
   });
 
   samples = mDive.samples;
