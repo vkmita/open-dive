@@ -1,9 +1,10 @@
 import { forIn } from 'lodash';
 import alveolarPressure from './alveolarPressure';
-import absolutePressure from './absolutePressure';
+import absolutePressure, { depthPressure } from './absolutePressure';
 import ZHL17B from './ZHL16B';
 import tissuePressure from './tissuePressure';
 import noStopTime from './noStopTime';
+import ascentCeiling from './ascentCeiling';
 
 export const initializeDive = ({ n2Ratio, heRatio }) => {
   const startedAt = Date.now();
@@ -46,7 +47,7 @@ export const addSample = ({ depth, dive, time }) => {
   const { heRatio, n2Ratio } = dive;
 
   const intervalTime = (time - lastSample.timestamp) / 1000.0;
-  let ndl;
+  let ndl, ceiling;
 
   forIn(ZHL17B, (compartment, compartmentNumber) => {
     const {
@@ -83,14 +84,34 @@ export const addSample = ({ depth, dive, time }) => {
     if (!ndl || n2StopTime < ndl.value) {
       ndl = { gas: 'n2', value: n2StopTime, compartment: compartmentNumber };
     }
+    const n2AscentCeiling = ascentCeiling(n2Pressure, n2);
+    if (!ceiling || n2AscentCeiling > ceiling.pressure) {
+      ceiling = { 
+        gas: 'n2', 
+        pressure: n2AscentCeiling,
+        depth: depthPressure(n2AscentCeiling),
+        compartment: compartmentNumber,
+      };
+    }
     const heStopTime = noStopTime({
       compartment: he,
       gasRatio: heRatio,
       tissuePressure: hePressure,
       depth,
     });
+
     if (!ndl || heStopTime < ndl.value) {
       ndl = { gas: 'he', value: heStopTime, compartment: compartmentNumber };
+    }
+
+    const heAscentCeiling = ascentCeiling(n2Pressure, he);
+    if (!ceiling || heAscentCeiling > ceiling.pressure) {
+      ceiling = { 
+        gas: 'he', 
+        pressure: heAscentCeiling, 
+        depth: depthPressure(heAscentCeiling), 
+        compartment: compartmentNumber,
+      };
     }
 
     sample.tissues[compartmentNumber] = {
@@ -99,7 +120,7 @@ export const addSample = ({ depth, dive, time }) => {
     };
   });
 
-  sample.ndl = ndl;
+  Object.assign(sample, { ndl, ascentCeiling: ceiling });
   dive.samples.push(sample);
 
   return dive;
