@@ -132,4 +132,3 @@ export const addSample = ({ depth, dive, time }) => {
 
   return dive;
 };
-
