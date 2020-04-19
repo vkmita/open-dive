@@ -34,6 +34,6 @@
     }
   },
   "lint-staged": {
-    "*.{js,css,md}": "prettier --single-quote --trailing-comma all"
+    "*.{js,css,md}": "prettier"
   }
 }

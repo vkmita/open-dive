@@ -1,8 +1,4 @@
-const ascentCeiling = (tissuePressure, compartment) => {
-  const { a, b } = compartment;
-  const ascentPressureLimit = (tissuePressure - a) * b;
-
-  return ascentPressureLimit
-};
+// an ascent ceiling for a compartment at a particular tissue pressure
+const ascentCeiling = (tissuePressure, { a, b }) => (tissuePressure - a) * b;
 
 export default ascentCeiling;

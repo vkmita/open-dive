@@ -11,5 +11,5 @@ test('air nitrogen at surface', () => {
   const nitrogen = 0.79;
   const notrogenInAlveoli = alveolarPressure(1, nitrogen);
 
-  expect(notrogenInAlveoli).toEqual(0.744710384117)
+  expect(notrogenInAlveoli).toEqual(0.744710384117);
 });

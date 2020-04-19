@@ -20,7 +20,7 @@ export default ({
   // k in the Shreiner equation
   const k = Math.LN2 / halfTime;
   // alveolar pressure at the surface
-  const pAlv0 = alveolarPressure(depthPressure, gasRatio)
+  const pAlv0 = alveolarPressure(depthPressure, gasRatio);
   // time needed to ascend to the surface
   const tAsc = depth / MAX_ASCENT_RATE;
 
@@ -28,14 +28,14 @@ export default ({
   // max partial pressure of gas the tissue can have at the current depth
   const maxPressureAtDepth = noDecompressionLimit({
     k,
-    m0: a + surfacePressure / b, 
-    R: rateOfPressureChange(depth, 0, tAsc) * gasRatio, 
+    m0: a + surfacePressure / b,
+    R: rateOfPressureChange(depth, 0, tAsc) * gasRatio,
     pAlv0,
-    tAsc: depth / MAX_ASCENT_RATE, 
+    tAsc: depth / MAX_ASCENT_RATE,
   });
 
   // we never hit a no stop time
-  if (maxPressureAtDepth > (pAlv0 * gasRatio)) return 99;
+  if (maxPressureAtDepth > pAlv0 * gasRatio) return 99;
 
   return schreinerSolvedForTime({
     k,
@@ -43,4 +43,4 @@ export default ({
     p0: tissuePressure,
     pAlv0,
   });
-}
+};

@@ -2,12 +2,12 @@ import { addSample, initializeDive } from '../dive';
 
 const dive = initializeDive({
   heRatio: 0,
-  n2Ratio: .79,
+  n2Ratio: 0.79,
 });
 
 test('iniitializeDive', () => {
   expect(dive.heRatio).toEqual(0);
-  expect(dive.n2Ratio).toEqual(.79)
+  expect(dive.n2Ratio).toEqual(0.79);
 });
 
 test('addSample', () => {
@@ -26,8 +26,8 @@ test('addSample', () => {
   });
 
   expect(sample.ndl).toEqual({
-    compartment: "2", 
-    gas: "n2",
-    value: 10.097413217365236
+    compartment: '2',
+    gas: 'n2',
+    value: 10.097413217365236,
   });
 });
