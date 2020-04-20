@@ -1,6 +1,6 @@
 import schreiner from './equations/schreiner';
 import alveolarPressure from './alveolarPressure';
-import absolutePressure from './absolutePressure';
+import absolutePressure from './equations/absolutePressure';
 import rateOfPressureChange from './rateOfPressureChange';
 
 // calculates the pressure of a tissue compartment

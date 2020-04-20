@@ -18,7 +18,7 @@ const tts = (sample, totalTime = 0) => {
       intervalTime: 1,
     });
     return tts(nextSample, totalTime + 1);
-  } 
+  }
   
   // ascend to ceiling
   const timeToAscend = (sample.depth - nextCeilingStep) / MAX_ASCENT_RATE;

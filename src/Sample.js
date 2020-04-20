@@ -1,6 +1,6 @@
 import { forIn } from 'lodash';
 import alveolarPressure from './alveolarPressure';
-import absolutePressure, { depthPressure } from './absolutePressure';
+import absolutePressure, { depthPressure } from './equations/absolutePressure';
 import tissuePressure from './tissuePressure';
 import noStopTime from './noStopTime';
 import ascentCeiling from './ascentCeiling';

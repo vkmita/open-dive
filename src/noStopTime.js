@@ -1,9 +1,12 @@
-import absolutePressure from './absolutePressure';
+import absolutePressure from './equations/absolutePressure';
 import alveolarPressure from './equations/alveolarPressure';
 import noDecompressionLimit from './equations/noDecompressionLimit';
-import rateOfPressureChange from './rateOfPressureChange';
 import { MAX_ASCENT_RATE } from './constants';
 import { solvedForTime as schreinerSolvedForTime } from './equations/schreiner';
+
+// meters / minute
+const rateOfPressureChange = (endDepth, startDepth, time) =>
+  (absolutePressure(endDepth) - absolutePressure(startDepth)) / time;
 
 // number of minutes a tissue can remain at depth before needing decompression
 export default ({
