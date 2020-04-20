@@ -8,19 +8,19 @@ test('no previous dive', () => {
   // decend to 40 meters
   dive.addSample({ depth: 40, intervalTime: 2 });
 
-  const deepSample = dive.lastSample();
+  let { lastSample } = dive;
   
   // we can stay at 40 meters for ~10 minutes
-  expect(deepSample.ndl).toEqual({
-    compartment: "2",
-    gas: "n2",
+  expect(lastSample.ndl).toEqual({
+    compartment: '2',
+    gas: 'n2',
     value: 10.097413217365236,
   });
 
   dive.addSample({ depth: 0, intervalTime: 4 });
-  const sampleAtSurface = dive.lastSample();
+  lastSample = dive.lastSample;
 
-  expect(sampleAtSurface.tissues).toEqual({
+  expect(lastSample.tissues).toEqual({
     '1': { n2: 1.6916082557197374, he: 0 },
     '2': { n2: 1.3690760311998016, he: 0 },
     '3': { n2: 1.1896024558572034, he: 0 },
