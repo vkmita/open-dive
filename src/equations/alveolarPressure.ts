@@ -4,7 +4,7 @@ import {
   ALVEOLAR_WATER_VAPOR_PRESSURE,
 } from '../constants';
 
-interface AlveolarPressureArgs {
+type AlveolarPressureArgs = {
   ambiantPressure: number,
   gasRatio: number,
 };

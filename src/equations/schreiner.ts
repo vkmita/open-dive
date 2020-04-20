@@ -1,4 +1,4 @@
-interface SchreinerArgs {
+type SchreinerArgs = {
   p0: number, 
   pAlv: number, 
   R: number, 
@@ -19,7 +19,7 @@ interface SchreinerArgs {
 export default ({ p0, pAlv, R, k, t }: SchreinerArgs): number =>
   pAlv + R * (t - 1 / k) - (pAlv - p0 - R / k) * Math.exp(-k * t);
 
-interface SchreinerSolvedForTimeArgs {
+type SchreinerSolvedForTimeArgs = {
   ptt: number, 
   p0: number, 
   pAlv0: number, 

@@ -1,4 +1,4 @@
-interface NoDecompressionLimitArgs {
+type NoDecompressionLimitArgs = {
   m0: number, 
   pAlv0: number, 
   R: number, 

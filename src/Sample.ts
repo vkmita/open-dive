@@ -6,13 +6,46 @@ import noStopTime from './noStopTime';
 import ascentCeiling from './ascentCeiling';
 import ZHL16B from './ZHL16B';
 
+import type { Gas } from './Dive';
+
+type Tissues = { 
+  [compartmentNumber: string]: { he: number, n2: number },
+};
+
+type NDL = { 
+  gas: 'he' | 'n2', 
+  value: number, 
+  compartment: string,
+};
+
+type SampleArgs = { 
+  depth: number, 
+  gas: Gas, 
+  time: number, 
+  gasSwitch?: Gas, 
+  tissues?: Tissues, 
+  ndl?: NDL, 
+  ascentCeiling?: number,
+}
+  
 export default class Sample {
-  constructor({ depth, gas, time, gasSwitch, tissues, ndl, ascentCeiling }) {
-    Object.assign(this, { depth, gas, time, gasSwitch, tissues, ndl, ascentCeiling });
+  depth: number;
+  gas: Gas;
+  time: number;
+  gasSwitch: Gas;
+  tissues: Tissues;
+  ndl: NDL;
+  ascentCeiling: number;
+
+  constructor({ time, ...args }: SampleArgs) {
+    Object.assign(this, { time, ...args });
 
     if (time === 0) {
       // all tissues fully saturated with air
-      const initalN2Pressure = alveolarPressure(absolutePressure(0), 0.79);
+      const initalN2Pressure = alveolarPressure({ 
+        ambiantPressure: absolutePressure(0), 
+        gasRatio: 0.79,
+      });
       const initialHePressure = 0;
 
       this.tissues = Object.keys(ZHL16B).reduce(
@@ -66,10 +99,13 @@ export default class Sample {
         tissuePressure: n2Pressure,
         depth,
       });
+
       if (!ndl || n2StopTime < ndl.value) {
         ndl = { gas: 'n2', value: n2StopTime, compartment: compartmentNumber };
       }
+
       const n2AscentCeiling = ascentCeiling(n2Pressure, n2);
+
       if (!ceiling || n2AscentCeiling > ceiling.pressure) {
         ceiling = { 
           gas: 'n2', 
@@ -78,6 +114,7 @@ export default class Sample {
           compartment: compartmentNumber,
         };
       }
+
       const heStopTime = noStopTime({
         compartment: he,
         gasRatio: heRatio,
@@ -90,6 +127,7 @@ export default class Sample {
       }
   
       const heAscentCeiling = ascentCeiling(n2Pressure, he);
+      
       if (!ceiling || heAscentCeiling > ceiling.pressure) {
         ceiling = { 
           gas: 'he', 

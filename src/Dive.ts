@@ -1,8 +1,25 @@
 import Sample from './Sample';
 
+export type Gas = {
+  he: number,
+  n2: number,
+}
+
+type DiveArgs = {
+  surfaceInterval?: number,
+  gases: Array<Gas>,
+  lastSample: Sample,
+  samples: Array<Sample>,
+}
+
 export default class Dive {
+  surfaceInterval?: number;
+  gases: Array<Gas>;
+  lastSample: Sample;
+  samples: Array<Sample>;
+
   // TODO please add TypeScript
-  constructor(args) {
+  constructor(args: DiveArgs) {
     Object.assign(this, args);
 
     // for now just use the first gas
@@ -20,7 +37,10 @@ export default class Dive {
   }
 
   // TODO write a test
-  createNextDive = ({ surfaceInterval, gases }) => {
+  createNextDive = (
+    { surfaceInterval, gases }: 
+    { surfaceInterval: number, gases: Array<Gas> }
+  ): Dive => {
     const numberOfSamples = this.samples.length;
     
     if (numberOfSamples === 1) {
@@ -35,7 +55,7 @@ export default class Dive {
 
       const initialSample = lastSample.createNextSample({
         depth: 0,
-        interval: surfaceInterval,
+        intervalTime: surfaceInterval,
         gasSwitch: initialGas,
       });
 
@@ -48,7 +68,10 @@ export default class Dive {
     }
   }
 
-  addSample = ({ depth, intervalTime, gasSwitch }) => {
+  addSample = (
+    { depth, intervalTime, gasSwitch }:
+    { depth: number, intervalTime: number, gasSwitch: number }
+  ): void => {
     const nextSample = this.lastSample.createNextSample({
       depth, 
       intervalTime, 

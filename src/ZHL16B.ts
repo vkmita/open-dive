@@ -1,4 +1,11 @@
-export default {
+type ZHL16B = {
+  [componentNumber: string]: {
+    he: { halfTime: number, a: number, b: number },
+    n2: { halfTime: number, a: number, b: number },
+  }
+}
+
+const ZHL16B: ZHL16B = {
   1: {
     n2: { halfTime: 4.0, a: 1.2599, b: 0.524 },
     he: { halfTime: 1.51, a: 1.7424, b: 0.4245 },
@@ -68,3 +75,5 @@ export default {
     he: { halfTime: 240.03, a: 0.5119, b: 0.9267 },
   },
 };
+
+export default ZHL16B;
