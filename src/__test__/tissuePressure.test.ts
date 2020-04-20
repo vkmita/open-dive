@@ -1,5 +1,7 @@
-import alveolarGasPressure from '../equations/alveolarPressure';
-import absolutePressure from '../equations/absolutePressure';
+import { 
+  alveolarPressure, 
+  ambientPressure 
+} from '../equations/pressure';
 import tissuePressure from '../tissuePressure';
 import ZH_L16B from '../ZHL16B';
 
@@ -26,10 +28,10 @@ test('helium', () => {
 
 test('n2 after descending to 40', () => {
   const gasRatio = 0.79;
-  const startTissuePressure = alveolarGasPressure(
-    absolutePressure(0),
+  const startTissuePressure = alveolarPressure({
+    ambientPressure: ambientPressure(0),
     gasRatio,
-  );
+  });
 
   const startDepth = 0;
   const endDepth = 40;

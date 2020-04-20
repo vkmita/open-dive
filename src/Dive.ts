@@ -8,8 +8,8 @@ export type Gas = {
 type DiveArgs = {
   surfaceInterval?: number,
   gases: Array<Gas>,
-  lastSample: Sample,
-  samples: Array<Sample>,
+  lastSample?: Sample,
+  samples?: Array<Sample>,
 }
 
 export default class Dive {
@@ -69,7 +69,7 @@ export default class Dive {
 
   addSample = (
     { depth, intervalTime, gasSwitch }:
-    { depth: number, intervalTime: number, gasSwitch: Gas }
+    { depth: number, intervalTime: number, gasSwitch?: Gas }
   ): void => {
     const nextSample = this.lastSample.createNextSample({
       depth, 
