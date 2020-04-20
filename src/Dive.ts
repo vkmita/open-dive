@@ -44,27 +44,27 @@ export default class Dive {
     
     if (numberOfSamples === 1) {
       throw new Error('The dive needs to end')
-    } else {
-      const { lastSample } = this;
-      if (lastSample.depth !== 0) {
-        throw new Error('The dive needs to end');
-      }
-
-      const { gases: [initialGas] } = this;
-
-      const initialSample = lastSample.createNextSample({
-        depth: 0,
-        intervalTime: surfaceInterval,
-        gasSwitch: initialGas,
-      });
-
-      return new Dive({
-        surfaceInterval,
-        gases,
-        lastSample: initialSample,
-        samples: [initialSample]
-      })
     }
+
+    const { lastSample } = this;
+    if (lastSample.depth !== 0) {
+      throw new Error('The dive needs to end');
+    }
+
+    const { gases: [initialGas] } = this;
+
+    const initialSample = lastSample.createNextSample({
+      depth: 0,
+      intervalTime: surfaceInterval,
+      gasSwitch: initialGas,
+    });
+
+    return new Dive({
+      surfaceInterval,
+      gases,
+      lastSample: initialSample,
+      samples: [initialSample]
+    })
   }
 
   addSample = (
