@@ -1,8 +1,10 @@
+export type Compartment = {
+  he: { halfTime: number, a: number, b: number },
+  n2: { halfTime: number, a: number, b: number },
+}
+
 type ZHL16B = {
-  [componentNumber: string]: {
-    he: { halfTime: number, a: number, b: number },
-    n2: { halfTime: number, a: number, b: number },
-  }
+  [componentNumber: string]: Compartment,
 }
 
 const ZHL16B: ZHL16B = {

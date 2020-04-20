@@ -36,7 +36,6 @@ export default class Dive {
     }
   }
 
-  // TODO write a test
   createNextDive = (
     { surfaceInterval, gases }: 
     { surfaceInterval: number, gases: Array<Gas> }
@@ -70,7 +69,7 @@ export default class Dive {
 
   addSample = (
     { depth, intervalTime, gasSwitch }:
-    { depth: number, intervalTime: number, gasSwitch: number }
+    { depth: number, intervalTime: number, gasSwitch: Gas }
   ): void => {
     const nextSample = this.lastSample.createNextSample({
       depth, 

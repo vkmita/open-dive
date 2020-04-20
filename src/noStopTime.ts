@@ -1,29 +1,31 @@
-import absolutePressure from './equations/absolutePressure';
-import alveolarPressure from './equations/alveolarPressure';
+import { 
+  alveolarPressure, 
+  ambientPressure, 
+  rateOfPressureChange,
+} from './equations/pressure';
 import noDecompressionLimit from './equations/noDecompressionLimit';
 import { MAX_ASCENT_RATE } from './constants';
 import { solvedForTime as schreinerSolvedForTime } from './equations/schreiner';
 
-// meters / minute
-const rateOfPressureChange = (endDepth, startDepth, time) =>
-  (absolutePressure(endDepth) - absolutePressure(startDepth)) / time;
-
 // number of minutes a tissue can remain at depth before needing decompression
-export default ({
-  compartment, // { a: number, b: number, halfTime: number }
-  gasRatio,
-  tissuePressure, // bar
-  depth, // meters
-}) => {
+export default (
+  { compartment, gasRatio, tissuePressure, depth }: 
+  { 
+    compartment: { a: number, b: number, halfTime: number }, 
+    gasRatio: number, 
+    tissuePressure: number, 
+    depth: number,
+  }
+) => {
   const { a, b, halfTime } = compartment;
 
-  const surfacePressure = absolutePressure(0);
-  const depthPressure = absolutePressure(depth);
+  const surfacePressure = ambientPressure(0);
+  const depthPressure = ambientPressure(depth);
 
   // k in the Shreiner equation
   const k = Math.LN2 / halfTime;
   // alveolar pressure at the surface
-  const pAlv0 = alveolarPressure(depthPressure, gasRatio);
+  const pAlv0 = alveolarPressure({ ambientPressure: depthPressure, gasRatio });
   // time needed to ascend to the surface
   const tAsc = depth / MAX_ASCENT_RATE;
 
@@ -32,7 +34,11 @@ export default ({
   const maxPressureAtDepth = noDecompressionLimit({
     k,
     m0: a + surfacePressure / b,
-    R: rateOfPressureChange(depth, 0, tAsc) * gasRatio,
+    R: rateOfPressureChange({ 
+      startDepth: depth, 
+      endDepth: 0, 
+      time: tAsc,
+    }) * gasRatio,
     pAlv0,
     tAsc: depth / MAX_ASCENT_RATE,
   });

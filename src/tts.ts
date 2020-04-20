@@ -1,8 +1,9 @@
+import Sample from './Sample';
+import { ceilingStep } from './equations/ceiling';
 import { MAX_ASCENT_RATE } from './constants';
-import { ceilingStep } from './ascentCeiling';
 
 // return the tts of the sample
-const tts = (sample, totalTime = 0) => {
+const tts = (sample: Sample, totalTime: number = 0) => {
   const { ascentCeiling: { depth: ceilingDepth } } = sample;
 
   if (ceilingDepth === 0) {

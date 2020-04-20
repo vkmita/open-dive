@@ -18,6 +18,7 @@
   "homepage": "https://github.com/vkmita/dive-computer#readme",
   "devDependencies": {
     "@babel/plugin-transform-typescript": "^7.9.4",
+    "@types/jest": "^25.2.1",
     "babel-jest": "^25.3.0",
     "husky": ">=4",
     "jest": "^25.3.0",

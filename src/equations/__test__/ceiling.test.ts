@@ -1,5 +1,5 @@
-import ascentCeiling from '../ascentCeiling';
-import ZHL16B from '../ZHL16B';
+import { ascentCeiling } from '../ceiling';
+import ZHL16B from '../../ZHL16B';
 
 test('ascentCeiling', () => {
   const tissuePressure = 0.912248948856579;

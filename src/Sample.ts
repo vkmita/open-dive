@@ -1,10 +1,13 @@
 import { forIn } from 'lodash';
-import alveolarPressure from './equations/alveolarPressure';
-import absolutePressure, { depthPressure } from './equations/absolutePressure';
+import { 
+  alveolarPressure,
+  ambientPressure, 
+  ambientPressureDepth,
+} from './equations/pressure';
+import { ascentCeiling } from './equations/ceiling';
+import ZHL16B, { Compartment } from './ZHL16B';
 import tissuePressure from './tissuePressure';
 import noStopTime from './noStopTime';
-import ascentCeiling from './ascentCeiling';
-import ZHL16B from './ZHL16B';
 
 import type { Gas } from './Dive';
 
@@ -18,6 +21,13 @@ type NDL = {
   compartment: string,
 };
 
+type AscentCeiling = {
+  gas: 'he' | 'n2', 
+  pressure: number,
+  depth: number,
+  compartment: string,
+};
+
 type SampleArgs = { 
   depth: number, 
   gas: Gas, 
@@ -25,8 +35,8 @@ type SampleArgs = {
   gasSwitch?: Gas, 
   tissues?: Tissues, 
   ndl?: NDL, 
-  ascentCeiling?: number,
-}
+  ascentCeiling?: AscentCeiling,
+};
   
 export default class Sample {
   depth: number;
@@ -35,7 +45,7 @@ export default class Sample {
   gasSwitch: Gas;
   tissues: Tissues;
   ndl: NDL;
-  ascentCeiling: number;
+  ascentCeiling: AscentCeiling;
 
   constructor({ time, ...args }: SampleArgs) {
     Object.assign(this, { time, ...args });
@@ -43,7 +53,7 @@ export default class Sample {
     if (time === 0) {
       // all tissues fully saturated with air
       const initalN2Pressure = alveolarPressure({ 
-        ambiantPressure: absolutePressure(0), 
+        ambientPressure: ambientPressure(0), 
         gasRatio: 0.79,
       });
       const initialHePressure = 0;
@@ -60,14 +70,17 @@ export default class Sample {
     }
   }
 
-  createNextSample = ({ depth, intervalTime, gasSwitch }) => {
+  createNextSample = (
+    { depth, intervalTime, gasSwitch }:
+    { depth: number, intervalTime: number, gasSwitch?: Gas }
+  ) => {
     const gas = this.gasSwitch || this.gas
     const { n2: n2Ratio, he: heRatio } = gas;
 
     // the sample ndl and ceiling
-    let ndl, ceiling;
+    let ndl: NDL, ceiling: AscentCeiling;
     const nextTissues = {};
-    forIn(ZHL16B, (compartment, compartmentNumber) => {
+    forIn(ZHL16B, (compartment: Compartment, compartmentNumber: string) => {
       const {
         n2,
         n2: { halfTime: n2Halftime },
@@ -110,7 +123,7 @@ export default class Sample {
         ceiling = { 
           gas: 'n2', 
           pressure: n2AscentCeiling,
-          depth: depthPressure(n2AscentCeiling),
+          depth: ambientPressureDepth(n2AscentCeiling),
           compartment: compartmentNumber,
         };
       }
@@ -132,7 +145,7 @@ export default class Sample {
         ceiling = { 
           gas: 'he', 
           pressure: heAscentCeiling, 
-          depth: depthPressure(heAscentCeiling), 
+          depth: ambientPressureDepth(heAscentCeiling), 
           compartment: compartmentNumber,
         };
       }

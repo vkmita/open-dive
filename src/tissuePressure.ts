@@ -1,7 +1,9 @@
 import schreiner from './equations/schreiner';
-import alveolarPressure from './equations/alveolarPressure';
-import absolutePressure from './equations/absolutePressure';
-import rateOfPressureChange from './rateOfPressureChange';
+import { 
+  alveolarPressure, 
+  ambientPressure, 
+  rateOfPressureChange,
+} from './equations/pressure';
 
 // calculates the pressure of a tissue compartment
 // given an initial pressure
@@ -20,19 +22,19 @@ export default ({
   const k = Math.LN2 / halfTime;
 
   // meters / minute
-  const pressureChange = rateOfPressureChange(
+  const pressureChange = rateOfPressureChange({
     startDepth,
     endDepth,
-    intervalTime,
-  );
+    time: intervalTime,
+  });
 
   // "R" in the schreiner equation
   const R = pressureChange * gasRatio;
 
-  const startAlviolarPressure = alveolarPressure(
-    absolutePressure(startDepth),
-    gasRatio,
-  );
+  const startAlviolarPressure = alveolarPressure({
+    ambientPressure: ambientPressure(startDepth),
+    gasRatio
+  });
 
   // P = Pio + R(t - 1/k) - [Pio - Po - (R/k)]e^-kt
   return schreiner({
