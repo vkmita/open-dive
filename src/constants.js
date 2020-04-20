@@ -9,6 +9,9 @@ const RESPIRATORY_QUOTIENT = 0.9;
 // American standard, average atmospheric pressure at sea level (bar)
 const ATA = 1.01325;
 
+// The meters betweem deco stops / steps
+const DECO_STEP_SIZE = 3;
+
 // U.S. Navy and the Journal of Underseaand Hyperbaric Medicine standard
 // bar per meter sea water
 // 3.28084 / 33.08
@@ -27,6 +30,7 @@ export {
   ALVEOLAR_C02_PRESSURE,
   ALVEOLAR_WATER_VAPOR_PRESSURE,
   ATA,
+  DECO_STEP_SIZE,
   MAX_ASCENT_RATE,
   MSW,
   RESPIRATORY_QUOTIENT,
