@@ -1,5 +1,5 @@
 import { forIn } from 'lodash';
-import alveolarPressure from './alveolarPressure';
+import alveolarPressure from './equations/alveolarPressure';
 import absolutePressure, { depthPressure } from './equations/absolutePressure';
 import tissuePressure from './tissuePressure';
 import noStopTime from './noStopTime';
@@ -28,14 +28,12 @@ export default class Sample {
   }
 
   createNextSample = ({ depth, intervalTime, gasSwitch }) => {
-    const nextTissues = {};
-    
     const gas = this.gasSwitch || this.gas
     const { n2: n2Ratio, he: heRatio } = gas;
 
     // the sample ndl and ceiling
     let ndl, ceiling;
-
+    const nextTissues = {};
     forIn(ZHL16B, (compartment, compartmentNumber) => {
       const {
         n2,

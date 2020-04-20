@@ -17,11 +17,13 @@
   },
   "homepage": "https://github.com/vkmita/dive-computer#readme",
   "devDependencies": {
+    "@babel/plugin-transform-typescript": "^7.9.4",
     "babel-jest": "^25.3.0",
     "husky": ">=4",
     "jest": "^25.3.0",
     "lint-staged": ">=10",
-    "prettier": "2.0.4"
+    "prettier": "2.0.4",
+    "typescript": "^3.8.3"
   },
   "dependencies": {
     "@babel/core": "^7.9.0",

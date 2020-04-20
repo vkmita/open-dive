@@ -1,5 +1,5 @@
 import schreiner from './equations/schreiner';
-import alveolarPressure from './alveolarPressure';
+import alveolarPressure from './equations/alveolarPressure';
 import absolutePressure from './equations/absolutePressure';
 import rateOfPressureChange from './rateOfPressureChange';
 

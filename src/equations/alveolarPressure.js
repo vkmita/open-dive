@@ -7,8 +7,8 @@ import {
 // "alveolar ventilation equation"
 // calculates the partial pressure of the inert gas in the
 // alvioli before it enters tissues
-export default (pAmb, Q) =>
-  (pAmb -
+export default (ambiantPressure, gasRatio) =>
+  (ambiantPressure -
     ALVEOLAR_WATER_VAPOR_PRESSURE +
     (1 - RESPIRATORY_QUOTIENT) * ALVEOLAR_C02_PRESSURE) *
-  Q;
+  gasRatio;
