@@ -1,11 +1,9 @@
 import { MAX_ASCENT_RATE } from './constants';
-import { createNextSample } from './dive';
 import { ceilingStep } from './ascentCeiling';
 
 // return the tts of the sample
 const tts = (sample, totalTime = 0) => {
-  const { ascentCeiling } = sample;
-  const ceilingDepth = ascentCeiling.depth;
+  const { ascentCeiling: { depth: ceilingDepth } } = sample;
 
   if (ceilingDepth === 0) {
     // we can now go to the surface
@@ -15,15 +13,19 @@ const tts = (sample, totalTime = 0) => {
   // ceiling stop does not change so stay for another minute
   const nextCeilingStep = ceilingStep(ceilingDepth);
   if (nextCeilingStep === sample.depth) {
-    const inOneMinute = sample.timestamp + 1000 * 60;
-    const nextSample = createNextSample({ depth: nextCeilingStep, prevSample: sample, time: inOneMinute });
+    const nextSample = sample.createNextSample({ 
+      depth: nextCeilingStep, 
+      intervalTime: 1,
+    });
     return tts(nextSample, totalTime + 1);
   } 
   
   // ascend to ceiling
   const timeToAscend = (sample.depth - nextCeilingStep) / MAX_ASCENT_RATE;
-  const time = sample.timestamp + (timeToAscend * 1000 * 60);
-  const nextSample = createNextSample({ depth: nextCeilingStep, prevSample: sample, time });
+  const nextSample = sample.createNextSample({ 
+    depth: nextCeilingStep, 
+    intervalTime: timeToAscend,
+  });
 
   return tts(nextSample, totalTime + timeToAscend);
 }
