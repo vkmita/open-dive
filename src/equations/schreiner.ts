@@ -26,8 +26,7 @@ interface SchreinerSolvedForTimeArgs {
   k: number,
 }
 
-// The Shreiner equation solved for time with R being zero, meaning there is no
-// pressure change
+// The Shreiner equation solved for time with R being zero (no pressure change)
 export const solvedForTime = 
   ({ ptt, p0, pAlv0, k }: SchreinerSolvedForTimeArgs): number =>
     -Math.log((ptt - pAlv0) / (-pAlv0 + p0)) / k;
