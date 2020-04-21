@@ -13,7 +13,7 @@ export default class GasCompartment {
 
     // the k in the sschreiner equation
     this.k = Math.LN2 / halfTime;
-    // m value at the survace
+    // m value at the surface
     this.m0 = a + ambientPressure(0) / b;
   }
 }
