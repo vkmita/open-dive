@@ -1,6 +1,6 @@
-import { 
-  alveolarPressure, 
-  ambientPressure, 
+import {
+  alveolarPressure,
+  ambientPressure,
   rateOfPressureChange,
 } from './equations/pressure';
 import noDecompressionLimit from './equations/noDecompressionLimit';
@@ -9,15 +9,17 @@ import { solvedForTime as schreinerSolvedForTime } from './equations/schreiner';
 import type GasCompartment from './GasCompartment';
 
 // number of minutes a tissue can remain at depth before needing decompression
-export default (
-  { gasCompartment, gasRatio, tissuePressure, depth }: 
-  { 
-    gasCompartment: GasCompartment, 
-    gasRatio: number, 
-    tissuePressure: number, 
-    depth: number,
-  }
-) => {
+export default ({
+  gasCompartment,
+  gasRatio,
+  tissuePressure,
+  depth,
+}: {
+  gasCompartment: GasCompartment;
+  gasRatio: number;
+  tissuePressure: number;
+  depth: number;
+}) => {
   const { a, b, k } = gasCompartment;
 
   const surfacePressure = ambientPressure(0);
@@ -33,11 +35,12 @@ export default (
   const maxPressureAtDepth = noDecompressionLimit({
     k,
     m0: a + surfacePressure / b,
-    R: rateOfPressureChange({ 
-      startDepth: depth, 
-      endDepth: 0, 
-      time: tAsc,
-    }) * gasRatio,
+    R:
+      rateOfPressureChange({
+        startDepth: depth,
+        endDepth: 0,
+        time: tAsc,
+      }) * gasRatio,
     pAlv0,
     tAsc: depth / MAX_ASCENT_RATE,
   });

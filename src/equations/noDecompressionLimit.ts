@@ -5,9 +5,17 @@
 // R: rate of pressure change
 // k: gas decay constant
 // m0: surfacing M-value
-export default (
-  { m0, pAlv0, R, k, tAsc }: 
-  { m0: number, pAlv0: number, R: number, k: number, tAsc: number }
-): number => 
-  (m0 - pAlv0 - R * (tAsc - 1 / k))
-    * Math.exp(k * tAsc) + pAlv0 - R / k;
+export default ({
+  m0,
+  pAlv0,
+  R,
+  k,
+  tAsc,
+}: {
+  m0: number;
+  pAlv0: number;
+  R: number;
+  k: number;
+  tAsc: number;
+}): number =>
+  (m0 - pAlv0 - R * (tAsc - 1 / k)) * Math.exp(k * tAsc) + pAlv0 - R / k;

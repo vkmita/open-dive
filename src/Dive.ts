@@ -2,11 +2,11 @@ import Sample from './Sample';
 import GasMix, { AIR } from './Gas';
 
 type DiveArgs = {
-  surfaceInterval?: number,
-  gases: Array<GasMix>,
-  lastSample?: Sample,
-  samples?: Array<Sample>,
-}
+  surfaceInterval?: number;
+  gases: Array<GasMix>;
+  lastSample?: Sample;
+  samples?: Array<Sample>;
+};
 
 export default class Dive {
   surfaceInterval?: number;
@@ -21,25 +21,30 @@ export default class Dive {
     // for now just use the first gas
     // TODO: gas switches
     if (!this.surfaceInterval) {
-      const { gases: [initialGas] } = this;
-      this.lastSample = new Sample({ 
-        depth: 0, 
+      const {
+        gases: [initialGas],
+      } = this;
+      (this.lastSample = new Sample({
+        depth: 0,
         gasMix: AIR,
         time: 0,
         gasSwitch: initialGas,
-      }),
-      this.samples = [this.lastSample];
+      })),
+        (this.samples = [this.lastSample]);
     }
   }
 
-  createNextDive = (
-    { surfaceInterval, gases }: 
-    { surfaceInterval: number, gases: Array<GasMix> }
-  ): Dive => {
+  createNextDive = ({
+    surfaceInterval,
+    gases,
+  }: {
+    surfaceInterval: number;
+    gases: Array<GasMix>;
+  }): Dive => {
     const numberOfSamples = this.samples.length;
-    
+
     if (numberOfSamples === 1) {
-      throw new Error('The dive needs to end')
+      throw new Error('The dive needs to end');
     }
 
     const { lastSample } = this;
@@ -60,19 +65,24 @@ export default class Dive {
       gases,
       lastSample: initialSample,
       samples: [initialSample],
-    })
-  }
+    });
+  };
 
-  addSample = (
-    { depth, intervalTime, gasSwitch }:
-    { depth: number, intervalTime: number, gasSwitch?: GasMix }
-  ): void => {
+  addSample = ({
+    depth,
+    intervalTime,
+    gasSwitch,
+  }: {
+    depth: number;
+    intervalTime: number;
+    gasSwitch?: GasMix;
+  }): void => {
     const nextSample = this.lastSample.createNextSample({
-      depth, 
+      depth,
       intervalTime,
       gasSwitch,
     });
     this.lastSample = nextSample;
     this.samples.push(nextSample);
-  }
+  };
 }

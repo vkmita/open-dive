@@ -1,10 +1,12 @@
 import type GasCompartment from './GasCompartment';
 import { ascentCeiling } from './equations/ceiling';
-import schreiner, { solvedForTime as schreinerSolvedForTime } from './equations/schreiner';
+import schreiner, {
+  solvedForTime as schreinerSolvedForTime,
+} from './equations/schreiner';
 import noDecompressionLimit from './equations/noDecompressionLimit';
-import { 
-  alveolarPressure, 
-  ambientPressure, 
+import {
+  alveolarPressure,
+  ambientPressure,
   rateOfPressureChange,
 } from './equations/pressure';
 import GasMix from './Gas';
@@ -31,13 +33,13 @@ export default class SampleTissue {
     gasCompartment, // GasCompartment
     pressure,
   }: {
-    startTissuePressure?: number, // bar
-    gasMix: GasMix,
-    startDepth?: number, // meters
-    endDepth: number, // meters
-    intervalTime?: number, // minutes
-    gasCompartment: GasCompartment, // GasCompartment)
-    pressure?: number,
+    startTissuePressure?: number; // bar
+    gasMix: GasMix;
+    startDepth?: number; // meters
+    endDepth: number; // meters
+    intervalTime?: number; // minutes
+    gasCompartment: GasCompartment; // GasCompartment)
+    pressure?: number;
   }) {
     Object.assign(this, { depth: endDepth, gasMix, gasCompartment, pressure });
 
@@ -68,7 +70,10 @@ export default class SampleTissue {
     const depthPressure = ambientPressure(this.depth);
 
     // alveolar pressure at the surface
-    const pAlv0 = alveolarPressure({ ambientPressure: depthPressure, gasRatio });
+    const pAlv0 = alveolarPressure({
+      ambientPressure: depthPressure,
+      gasRatio,
+    });
     // time needed to ascend to the surface
     const tAsc = this.depth / MAX_ASCENT_RATE;
 
@@ -77,11 +82,12 @@ export default class SampleTissue {
     const maxPressureAtDepth = noDecompressionLimit({
       k,
       m0: a + surfacePressure / b,
-      R: rateOfPressureChange({ 
-        startDepth: this.depth, 
-        endDepth: 0, 
-        time: tAsc,
-      }) * gasRatio,
+      R:
+        rateOfPressureChange({
+          startDepth: this.depth,
+          endDepth: 0,
+          time: tAsc,
+        }) * gasRatio,
       pAlv0,
       tAsc: this.depth / MAX_ASCENT_RATE,
     });
@@ -103,6 +109,6 @@ export default class SampleTissue {
     const { a, b } = this.gasCompartment;
     const pComp = this.pressure;
 
-    return ascentCeiling({ a, b, pComp })
+    return ascentCeiling({ a, b, pComp });
   }
 }

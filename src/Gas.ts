@@ -4,9 +4,9 @@ import { rateOfPressureChange } from './equations/pressure';
 type GasType = 'back' | 'deco';
 
 type GasMixArgs = {
-  he: number,
-  o2: number,
-  type: GasType,
+  he: number;
+  o2: number;
+  type: GasType;
 };
 
 export default class GasMix {
@@ -25,10 +25,17 @@ export default class GasMix {
     this.mod = this.maxPPo2 / o2;
   }
 
-  R(
-    { startDepth, endDepth, time, gas }: 
-    { startDepth: number, endDepth: number, time: number, gas: 'he' | 'n2' }
-  ): number {
+  R({
+    startDepth,
+    endDepth,
+    time,
+    gas,
+  }: {
+    startDepth: number;
+    endDepth: number;
+    time: number;
+    gas: 'he' | 'n2';
+  }): number {
     const pressureChange = rateOfPressureChange({
       startDepth,
       endDepth,
@@ -40,4 +47,4 @@ export default class GasMix {
   }
 }
 
-export const AIR = new GasMix({ he: 0, o2: .21, type: 'back' });
+export const AIR = new GasMix({ he: 0, o2: 0.21, type: 'back' });

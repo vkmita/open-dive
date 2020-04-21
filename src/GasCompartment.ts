@@ -11,10 +11,19 @@ export default class GasCompartment {
   k: number;
   m0: number;
 
-  constructor(
-    { a, b, compartment, gas, halfTime }: 
-    { a: number, b: number, compartment: string, gas: InterGas, halfTime: number }
-  ) {
+  constructor({
+    a,
+    b,
+    compartment,
+    gas,
+    halfTime,
+  }: {
+    a: number;
+    b: number;
+    compartment: string;
+    gas: InterGas;
+    halfTime: number;
+  }) {
     Object.assign(this, { a, b, compartment, gas, halfTime });
 
     // the k in the schreiner equation

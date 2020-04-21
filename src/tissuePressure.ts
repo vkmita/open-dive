@@ -1,7 +1,7 @@
 import schreiner from './equations/schreiner';
-import { 
-  alveolarPressure, 
-  ambientPressure, 
+import {
+  alveolarPressure,
+  ambientPressure,
   rateOfPressureChange,
 } from './equations/pressure';
 
@@ -30,7 +30,7 @@ export default ({
 
   const startAlviolarPressure = alveolarPressure({
     ambientPressure: ambientPressure(startDepth),
-    gasRatio
+    gasRatio,
   });
 
   // P = Pio + R(t - 1/k) - [Pio - Po - (R/k)]e^-kt

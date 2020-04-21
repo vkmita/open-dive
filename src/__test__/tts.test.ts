@@ -2,7 +2,6 @@ import { AIR } from '../Gas';
 import Dive from '../Dive';
 import tts from '../tts';
 
-
 describe('tts', () => {
   it('changes at depth over time', () => {
     const dive = new Dive({
@@ -17,7 +16,7 @@ describe('tts', () => {
     let lastSample = dive.lastSample;
 
     expect(tts(lastSample)).toEqual(4);
-  
+
     dive.addSample({
       depth: 40,
       intervalTime: 28,
@@ -26,5 +25,5 @@ describe('tts', () => {
     lastSample = dive.lastSample;
 
     expect(tts(lastSample)).toEqual(27);
-  })
+  });
 });

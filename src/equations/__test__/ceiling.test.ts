@@ -6,6 +6,10 @@ test('ascentCeiling', () => {
   const tissuePressure = 0.912248948856579;
   const gasCompartment = ZHL16B[4];
 
-  const ascentCeilingPressure = ascentCeiling({ pComp: tissuePressure, a: gasCompartment.a, b: gasCompartment.b });
+  const ascentCeilingPressure = ascentCeiling({
+    pComp: tissuePressure,
+    a: gasCompartment.a,
+    b: gasCompartment.b,
+  });
   expect(ascentCeilingPressure).toEqual(-0.057161034714824414);
 });
