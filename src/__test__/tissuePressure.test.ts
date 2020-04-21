@@ -12,7 +12,7 @@ test('helium', () => {
   const startDepth = 0;
   const endDepth = 26.7716711766;
   const intervalTime = 2;
-  const halfTime = ZH_L16B[1].he.halfTime;
+  const gasCompartment = ZH_L16B[1].he;
 
   const endTissuePressure = tissuePressure({
     startTissuePressure,
@@ -20,7 +20,7 @@ test('helium', () => {
     startDepth,
     endDepth,
     intervalTime,
-    halfTime,
+    gasCompartment,
   });
 
   expect(endTissuePressure).toEqual(0.6714383659133543);
@@ -36,7 +36,7 @@ test('n2 after descending to 40', () => {
   const startDepth = 0;
   const endDepth = 40;
   const intervalTime = 2;
-  const halfTime = ZH_L16B[3].n2.halfTime;
+  const gasCompartment = ZH_L16B[3].n2;
 
   const endTissuePressure = tissuePressure({
     startTissuePressure,
@@ -44,7 +44,7 @@ test('n2 after descending to 40', () => {
     startDepth,
     endDepth,
     intervalTime,
-    halfTime,
+    gasCompartment,
   });
 
   expect(endTissuePressure).toEqual(0.9227164488565798);

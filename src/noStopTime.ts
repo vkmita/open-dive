@@ -6,7 +6,7 @@ import {
 import noDecompressionLimit from './equations/noDecompressionLimit';
 import { MAX_ASCENT_RATE } from './constants';
 import { solvedForTime as schreinerSolvedForTime } from './equations/schreiner';
-import type { GasCompartment } from './ZHL16B';
+import type GasCompartment from './GasCompartment';
 
 // number of minutes a tissue can remain at depth before needing decompression
 export default (
@@ -18,13 +18,11 @@ export default (
     depth: number,
   }
 ) => {
-  const { a, b, halfTime } = gasCompartment;
+  const { a, b, k } = gasCompartment;
 
   const surfacePressure = ambientPressure(0);
   const depthPressure = ambientPressure(depth);
 
-  // k in the Shreiner equation
-  const k = Math.LN2 / halfTime;
   // alveolar pressure at the surface
   const pAlv0 = alveolarPressure({ ambientPressure: depthPressure, gasRatio });
   // time needed to ascend to the surface

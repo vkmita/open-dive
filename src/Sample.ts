@@ -89,7 +89,7 @@ export default class Sample {
         startDepth: this.depth,
         endDepth: depth,
         intervalTime,
-        halfTime: n2.halfTime,
+        gasCompartment: n2,
       });
   
       const hePressure = tissuePressure({
@@ -98,7 +98,7 @@ export default class Sample {
         startDepth: this.depth,
         endDepth: depth,
         intervalTime,
-        halfTime: he.halfTime,
+        gasCompartment: he,
       });
   
       const n2StopTime = noStopTime({

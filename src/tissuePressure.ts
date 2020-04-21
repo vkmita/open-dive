@@ -16,11 +16,8 @@ export default ({
   startDepth, // meters
   endDepth, // meters
   intervalTime, // minutes
-  halfTime, // minutes
+  gasCompartment, // GasCompartment
 }) => {
-  // the "k" in the schreiner equation
-  const k = Math.LN2 / halfTime;
-
   // meters / minute
   const pressureChange = rateOfPressureChange({
     startDepth,
@@ -41,7 +38,7 @@ export default ({
     pAlv: startAlviolarPressure,
     R,
     p0: startTissuePressure,
-    k,
+    k: gasCompartment.k,
     t: intervalTime,
   });
 };

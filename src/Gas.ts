@@ -17,6 +17,7 @@ export default class Gas {
 
   constructor({ he, o2, type }: GasArgs) {
     Object.assign(this, { he, o2, type });
+    
     this.n2 = 1 - he - o2;
     this.maxPPo2 = this.calcMaxPPo2();
     this.mod = this.calcMod();
