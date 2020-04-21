@@ -12,18 +12,7 @@ test('no previous dive', () => {
   let { lastSample } = dive;
 
   // we can stay at 40 meters for ~10 minutes
-  expect(lastSample.ndl).toEqual({
-    gasCompartment: {
-      a: 1,
-      b: 0.6514,
-      compartment: '2',
-      gas: 'n2',
-      halfTime: 8,
-      k: 0.08664339756999316,
-      m0: 2.5554958550813636,
-    },
-    value: 10.097413217365236,
-  });
+  expect(lastSample.ndl.value).toEqual(10.097413217365236);
 
   dive.addSample({ depth: 0, intervalTime: 4 });
   lastSample = dive.lastSample;

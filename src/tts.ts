@@ -16,6 +16,8 @@ const tts = (sample: Sample, totalTime: number = 0) => {
   // ceiling stop does not change so stay for another minute
   const nextCeilingStep = ceilingStep(ceilingDepth);
   if (nextCeilingStep === sample.depth) {
+    // figure out the exact time we need here
+
     const nextSample = sample.createNextSample({
       depth: nextCeilingStep,
       intervalTime: 1,
