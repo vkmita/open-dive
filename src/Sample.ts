@@ -9,7 +9,7 @@ import ZHL16B, { Compartment } from './ZHL16B';
 import tissuePressure from './tissuePressure';
 import noStopTime from './noStopTime';
 
-import type { Gas } from './Dive';
+import Gas from './Gas';
 
 type Tissues = { 
   [compartmentNumber: string]: { he: number, n2: number },

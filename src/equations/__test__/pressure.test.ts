@@ -1,5 +1,9 @@
 import { ATA } from '../../constants';
-import { alveolarPressure, ambientPressure } from '../pressure';
+import { 
+  alveolarPressure, 
+  ambientPressure, 
+  ambientPressureDepth,
+} from '../pressure';
 
 describe('pressure', () => {
   describe('alveolar', () => {
@@ -21,7 +25,7 @@ describe('pressure', () => {
 
   describe('pressure depth', () => {
     it('depth at an ambient pressure', () => {
-      expect(ambientPressure(ATA)).toEqual(0);
+      expect(ambientPressureDepth(ATA)).toEqual(0);
     });
   });
 });

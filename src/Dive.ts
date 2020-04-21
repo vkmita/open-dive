@@ -1,9 +1,5 @@
 import Sample from './Sample';
-
-export type Gas = {
-  he: number,
-  n2: number,
-}
+import Gas, { Air } from './Gas';
 
 type DiveArgs = {
   surfaceInterval?: number,
@@ -28,7 +24,7 @@ export default class Dive {
       const { gases: [initialGas] } = this;
       this.lastSample = new Sample({ 
         depth: 0, 
-        gas: { he: 0, n2: .79 },
+        gas: Air,
         time: 0,
         gasSwitch: initialGas,
       }),
@@ -63,7 +59,7 @@ export default class Dive {
       surfaceInterval,
       gases,
       lastSample: initialSample,
-      samples: [initialSample]
+      samples: [initialSample],
     })
   }
 

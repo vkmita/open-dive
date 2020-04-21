@@ -1,8 +1,9 @@
 import Dive from '../Dive';
+import { Air } from '../Gas';
 
 test('no previous dive', () => {
   const dive = new Dive({
-    gases: [{ he: 0, n2: .79 }]
+    gases: [Air],
   });
 
   // decend to 40 meters
