@@ -1,36 +1,30 @@
-import { forIn } from 'lodash';
 import { 
   alveolarPressure,
   ambientPressure, 
   ambientPressureDepth,
 } from './equations/pressure';
-import { ascentCeiling } from './equations/ceiling';
-import ZHL16B, { Compartment } from './ZHL16B';
-import tissuePressure from './tissuePressure';
-import noStopTime from './noStopTime';
+import ZHL16B from './ZHL16B';
 
 import type Gas from './Gas';
+import type GasCompartment from './GasCompartment';
+import SampleTissue from './SampleTissue';
 
-type Tissues = { 
-  [compartmentNumber: string]: { he: number, n2: number },
-};
+type Tissues = { [compartment: string]: { he: SampleTissue, n2: SampleTissue }};
 
 type NDL = { 
-  gas: 'he' | 'n2', 
   value: number, 
-  compartment: string,
+  gasCompartment: GasCompartment,
 };
 
 type AscentCeiling = {
-  gas: 'he' | 'n2', 
   pressure: number,
   depth: number,
-  compartment: string,
+  gasCompartment: GasCompartment,
 };
 
 type SampleArgs = { 
   depth: number, 
-  gas: Gas, 
+  gasMix: Gas, 
   time: number, 
   gasSwitch?: Gas, 
   tissues?: Tissues, 
@@ -40,7 +34,7 @@ type SampleArgs = {
   
 export default class Sample {
   depth: number;
-  gas: Gas;
+  gasMix: Gas;
   time: number;
   gasSwitch: Gas;
   tissues: Tissues;
@@ -74,86 +68,45 @@ export default class Sample {
     { depth, intervalTime, gasSwitch }:
     { depth: number, intervalTime: number, gasSwitch?: Gas }
   ) => {
-    const gas = this.gasSwitch || this.gas
-    const { n2: n2Ratio, he: heRatio } = gas;
+    const gasMix = this.gasSwitch || this.gasMix
 
     // the sample ndl and ceiling
     let ndl: NDL, ceiling: AscentCeiling;
     const nextTissues = {};
-    forIn(ZHL16B, (compartment: Compartment, compartmentNumber: string) => {
-      const { n2, he } = compartment;
-  
-      const n2Pressure = tissuePressure({
-        startTissuePressure: this.tissues[compartmentNumber].n2,
-        gasRatio: n2Ratio,
+    ZHL16B.forEach(gasCompartment => {
+      const { compartment, gas } = gasCompartment;
+
+      const sampleTissue = new SampleTissue({
+        startTissuePressure: this.tissues[compartment][gas].pressure,
+        gas: gasMix,
         startDepth: this.depth,
         endDepth: depth,
         intervalTime,
-        gasCompartment: n2,
+        gasCompartment,
       });
   
-      const hePressure = tissuePressure({
-        startTissuePressure: this.tissues[compartmentNumber].he,
-        gasRatio: heRatio,
-        startDepth: this.depth,
-        endDepth: depth,
-        intervalTime,
-        gasCompartment: he,
-      });
-  
-      const n2StopTime = noStopTime({
-        gasCompartment: n2,
-        gasRatio: n2Ratio,
-        tissuePressure: n2Pressure,
-        depth,
-      });
+      const noStopTime = sampleTissue.noStopTime();
 
-      if (!ndl || n2StopTime < ndl.value) {
-        ndl = { gas: 'n2', value: n2StopTime, compartment: compartmentNumber };
+      if (!ndl || noStopTime < ndl.value) {
+        ndl = { value: noStopTime, gasCompartment };
       }
 
-      const n2AscentCeiling = ascentCeiling({ pComp: n2Pressure, a: n2.a, b: n2.b });
+      const ascentCeiling = sampleTissue.ascentCeiling();
 
-      if (!ceiling || n2AscentCeiling > ceiling.pressure) {
+      if (!ceiling || ascentCeiling > ceiling.pressure) {
         ceiling = { 
-          gas: 'n2', 
-          pressure: n2AscentCeiling,
-          depth: ambientPressureDepth(n2AscentCeiling),
-          compartment: compartmentNumber,
+          pressure: ascentCeiling,
+          depth: ambientPressureDepth(ascentCeiling),
+          gasCompartment,
         };
       }
 
-      const heStopTime = noStopTime({
-        gasCompartment: he,
-        gasRatio: heRatio,
-        tissuePressure: hePressure,
-        depth,
-      });
-  
-      if (!ndl || heStopTime < ndl.value) {
-        ndl = { gas: 'he', value: heStopTime, compartment: compartmentNumber };
-      }
-  
-      const heAscentCeiling = ascentCeiling({ pComp: hePressure, a: he.a, b: he.b });
-      
-      if (!ceiling || heAscentCeiling > ceiling.pressure) {
-        ceiling = { 
-          gas: 'he', 
-          pressure: heAscentCeiling, 
-          depth: ambientPressureDepth(heAscentCeiling), 
-          compartment: compartmentNumber,
-        };
-      }
-  
-      nextTissues[compartmentNumber] = {
-        n2: n2Pressure,
-        he: hePressure,
-      };
+      nextTissues[gasCompartment.compartment][gasCompartment.gas];
     });
 
     return new Sample({ 
       depth,
-      gas,
+      gasMix,
       gasSwitch,
       time: this.time + intervalTime,
       tissues: nextTissues,

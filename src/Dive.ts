@@ -24,7 +24,7 @@ export default class Dive {
       const { gases: [initialGas] } = this;
       this.lastSample = new Sample({ 
         depth: 0, 
-        gas: Air,
+        gasMix: Air,
         time: 0,
         gasSwitch: initialGas,
       }),
