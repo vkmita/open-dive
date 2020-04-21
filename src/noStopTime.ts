@@ -6,18 +6,19 @@ import {
 import noDecompressionLimit from './equations/noDecompressionLimit';
 import { MAX_ASCENT_RATE } from './constants';
 import { solvedForTime as schreinerSolvedForTime } from './equations/schreiner';
+import type { GasCompartment } from './ZHL16B';
 
 // number of minutes a tissue can remain at depth before needing decompression
 export default (
-  { compartment, gasRatio, tissuePressure, depth }: 
+  { gasCompartment, gasRatio, tissuePressure, depth }: 
   { 
-    compartment: { a: number, b: number, halfTime: number }, 
+    gasCompartment: GasCompartment, 
     gasRatio: number, 
     tissuePressure: number, 
     depth: number,
   }
 ) => {
-  const { a, b, halfTime } = compartment;
+  const { a, b, halfTime } = gasCompartment;
 
   const surfacePressure = ambientPressure(0);
   const depthPressure = ambientPressure(depth);

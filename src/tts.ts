@@ -15,7 +15,7 @@ const tts = (sample: Sample, totalTime: number = 0) => {
   const nextCeilingStep = ceilingStep(ceilingDepth);
   if (nextCeilingStep === sample.depth) {
     const nextSample = sample.createNextSample({ 
-      depth: nextCeilingStep, 
+      depth: nextCeilingStep,
       intervalTime: 1,
     });
     return tts(nextSample, totalTime + 1);

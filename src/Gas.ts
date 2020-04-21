@@ -24,7 +24,6 @@ export default class Gas {
 
   // TODO: make configurable
   calcMaxPPo2 = (): 1.4 | 1.6 => this.type === 'back' ? 1.4 : 1.6;
-
   calcMod = (): number => this.maxPPo2 / this.o2;
 }
 

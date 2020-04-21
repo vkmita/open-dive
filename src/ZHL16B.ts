@@ -1,7 +1,5 @@
-export type Compartment = {
-  he: { halfTime: number, a: number, b: number },
-  n2: { halfTime: number, a: number, b: number },
-}
+export type Compartment = { he: GasCompartment, n2: GasCompartment };
+export type GasCompartment = { halfTime: number, a: number, b: number };
 
 type ZHL16B = {
   [componentNumber: string]: Compartment,

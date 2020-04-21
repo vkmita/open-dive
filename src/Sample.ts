@@ -9,7 +9,7 @@ import ZHL16B, { Compartment } from './ZHL16B';
 import tissuePressure from './tissuePressure';
 import noStopTime from './noStopTime';
 
-import Gas from './Gas';
+import type Gas from './Gas';
 
 type Tissues = { 
   [compartmentNumber: string]: { he: number, n2: number },
@@ -44,8 +44,8 @@ export default class Sample {
   time: number;
   gasSwitch: Gas;
   tissues: Tissues;
-  ndl: NDL;
-  ascentCeiling: AscentCeiling;
+  ndl?: NDL;
+  ascentCeiling?: AscentCeiling;
 
   constructor({ time, ...args }: SampleArgs) {
     Object.assign(this, { time, ...args });
@@ -81,12 +81,7 @@ export default class Sample {
     let ndl: NDL, ceiling: AscentCeiling;
     const nextTissues = {};
     forIn(ZHL16B, (compartment: Compartment, compartmentNumber: string) => {
-      const {
-        n2,
-        n2: { halfTime: n2Halftime },
-        he,
-        he: { halfTime: heHalfTime },
-      } = compartment;
+      const { n2, he } = compartment;
   
       const n2Pressure = tissuePressure({
         startTissuePressure: this.tissues[compartmentNumber].n2,
@@ -94,7 +89,7 @@ export default class Sample {
         startDepth: this.depth,
         endDepth: depth,
         intervalTime,
-        halfTime: n2Halftime,
+        halfTime: n2.halfTime,
       });
   
       const hePressure = tissuePressure({
@@ -103,11 +98,11 @@ export default class Sample {
         startDepth: this.depth,
         endDepth: depth,
         intervalTime,
-        halfTime: heHalfTime,
+        halfTime: he.halfTime,
       });
   
       const n2StopTime = noStopTime({
-        compartment: n2,
+        gasCompartment: n2,
         gasRatio: n2Ratio,
         tissuePressure: n2Pressure,
         depth,
@@ -117,7 +112,7 @@ export default class Sample {
         ndl = { gas: 'n2', value: n2StopTime, compartment: compartmentNumber };
       }
 
-      const n2AscentCeiling = ascentCeiling(n2Pressure, n2);
+      const n2AscentCeiling = ascentCeiling({ pComp: n2Pressure, a: n2.a, b: n2.b });
 
       if (!ceiling || n2AscentCeiling > ceiling.pressure) {
         ceiling = { 
@@ -129,7 +124,7 @@ export default class Sample {
       }
 
       const heStopTime = noStopTime({
-        compartment: he,
+        gasCompartment: he,
         gasRatio: heRatio,
         tissuePressure: hePressure,
         depth,
@@ -139,7 +134,7 @@ export default class Sample {
         ndl = { gas: 'he', value: heStopTime, compartment: compartmentNumber };
       }
   
-      const heAscentCeiling = ascentCeiling(n2Pressure, he);
+      const heAscentCeiling = ascentCeiling({ pComp: hePressure, a: he.a, b: he.b });
       
       if (!ceiling || heAscentCeiling > ceiling.pressure) {
         ceiling = { 
