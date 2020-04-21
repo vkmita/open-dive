@@ -7,7 +7,7 @@ import {
   ambientPressure, 
   rateOfPressureChange,
 } from './equations/pressure';
-import Gas from './Gas';
+import GasMix from './Gas';
 import { MAX_ASCENT_RATE } from './constants';
 
 // associated with a Sample
@@ -18,13 +18,13 @@ export default class SampleTissue {
   // endDepth: number; // meters
   // intervalTime: number; // minutes
   depth: number;
-  gas: Gas;
+  gasMix: GasMix;
   gasCompartment: GasCompartment; // GasCompartment
   pressure: number;
 
   constructor({
     startTissuePressure, // bar
-    gas, // 0 - 1, ex: .79
+    gasMix, // 0 - 1, ex: .79
     startDepth, // meters
     endDepth, // meters
     intervalTime, // minutes
@@ -32,22 +32,22 @@ export default class SampleTissue {
     pressure,
   }: {
     startTissuePressure?: number, // bar
-    gas: Gas, // 0 - 1, ex: .79
+    gasMix: GasMix,
     startDepth?: number, // meters
     endDepth: number, // meters
     intervalTime?: number, // minutes
     gasCompartment: GasCompartment, // GasCompartment)
     pressure?: number,
   }) {
-    Object.assign(this, { depth: endDepth, gas, gasCompartment, pressure });
+    Object.assign(this, { depth: endDepth, gasMix, gasCompartment, pressure });
 
     if (!pressure) {
-      const inertGas: 'he' | 'n2' = gasCompartment.gas;
-      const R = gas.R({ startDepth, endDepth, time: intervalTime, gas: inertGas });
+      const { gas } = gasCompartment;
+      const R = gasMix.R({ startDepth, endDepth, time: intervalTime, gas });
       // meters / minute
       const startAlviolarPressure = alveolarPressure({
         ambientPressure: ambientPressure(startDepth),
-        gasRatio: gas[gasCompartment.gas],
+        gasRatio: gasMix[gasCompartment.gas],
       });
 
       this.pressure = schreiner({
@@ -62,7 +62,7 @@ export default class SampleTissue {
 
   noStopTime() {
     const { a, b, k, gas } = this.gasCompartment;
-    const gasRatio = this.gas[gas];
+    const gasRatio = this.gasMix[gas];
 
     const surfacePressure = ambientPressure(0);
     const depthPressure = ambientPressure(this.depth);
@@ -89,12 +89,14 @@ export default class SampleTissue {
     // we never hit a no stop time
     if (maxPressureAtDepth > pAlv0 * gasRatio) return 99;
 
-    return schreinerSolvedForTime({
+    const noStopTime = schreinerSolvedForTime({
       k,
       ptt: maxPressureAtDepth,
       p0: this.pressure,
       pAlv0,
     });
+
+    return noStopTime < 0 ? 0 : noStopTime;
   }
 
   ascentCeiling() {

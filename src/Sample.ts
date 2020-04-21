@@ -4,8 +4,9 @@ import {
   ambientPressureDepth,
 } from './equations/pressure';
 import ZHL16B from './ZHL16B';
+import { AIR } from './Gas';
 
-import type Gas from './Gas';
+import type GasMix from './Gas';
 import type GasCompartment from './GasCompartment';
 import SampleTissue from './SampleTissue';
 
@@ -24,61 +25,71 @@ type AscentCeiling = {
 
 type SampleArgs = { 
   depth: number, 
-  gasMix: Gas, 
+  gasMix: GasMix, 
   time: number, 
-  gasSwitch?: Gas, 
+  gasSwitch?: GasMix, 
   tissues?: Tissues, 
   ndl?: NDL, 
   ascentCeiling?: AscentCeiling,
 };
+
+const EMPTY_TISSUES = () => ZHL16B.reduce((tissues, { compartment }) =>  
+  tissues[compartment] = {} && tissues, {});
   
 export default class Sample {
   depth: number;
-  gasMix: Gas;
+  gasMix: GasMix;
   time: number;
-  gasSwitch: Gas;
+  gasSwitch: GasMix;
   tissues: Tissues;
   ndl?: NDL;
   ascentCeiling?: AscentCeiling;
 
-  constructor({ time, ...args }: SampleArgs) {
-    Object.assign(this, { time, ...args });
+  constructor({ time, gasMix, ...args }: SampleArgs) {
+    Object.assign(this, { time, gasMix, ...args });
+
 
     if (time === 0) {
       // all tissues fully saturated with air
       const initalN2Pressure = alveolarPressure({ 
         ambientPressure: ambientPressure(0), 
-        gasRatio: 0.79,
+        gasRatio: AIR.n2,
       });
-      const initialHePressure = 0;
 
-      this.tissues = Object.keys(ZHL16B).reduce(
-        (tissues, compartmentNumber) => {
-          tissues[compartmentNumber] = {
-            n2: initalN2Pressure,
-            he: initialHePressure,
-          }
+      this.tissues = ZHL16B.reduce(
+        (tissues, gasCompartment) => {
+          const { gas, compartment } = gasCompartment;
+          tissues[compartment] = tissues[compartment] || {};
+
+          const initialPressure = gas === 'he' ? 0 : initalN2Pressure;
+
+          tissues[compartment][gas] = new SampleTissue({ 
+            pressure: initialPressure, 
+            gasMix, 
+            gasCompartment,
+            endDepth: 0,
+          });
           return tissues;
         },
-      {});
+        {});
     }
   }
 
   createNextSample = (
     { depth, intervalTime, gasSwitch }:
-    { depth: number, intervalTime: number, gasSwitch?: Gas }
+    { depth: number, intervalTime: number, gasSwitch?: GasMix }
   ) => {
-    const gasMix = this.gasSwitch || this.gasMix
+    const gasMix = this.gasSwitch || this.gasMix;
 
     // the sample ndl and ceiling
     let ndl: NDL, ceiling: AscentCeiling;
-    const nextTissues = {};
-    ZHL16B.forEach(gasCompartment => {
+    const nextTissues = ZHL16B.reduce((tissues, gasCompartment) => {
       const { compartment, gas } = gasCompartment;
+      tissues[compartment] = tissues[compartment] || {};
 
       const sampleTissue = new SampleTissue({
         startTissuePressure: this.tissues[compartment][gas].pressure,
-        gas: gasMix,
+        gasMix,
         startDepth: this.depth,
         endDepth: depth,
         intervalTime,
@@ -101,8 +112,9 @@ export default class Sample {
         };
       }
 
-      nextTissues[gasCompartment.compartment][gasCompartment.gas];
-    });
+      tissues[compartment][gas] = sampleTissue;
+      return tissues;
+    }, {});
 
     return new Sample({ 
       depth,

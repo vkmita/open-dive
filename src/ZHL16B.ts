@@ -6,7 +6,7 @@ const ZHL16B: ZHL16B = [
   new GasCompartment({ compartment: '1', gas: 'n2', halfTime: 4.0, a: 1.2599, b: 0.524 }),
   new GasCompartment({ compartment: '1', gas: 'he', halfTime: 1.51, a: 1.7424, b: 0.4245 }),
   new GasCompartment({ compartment: '1b', gas: 'n2', halfTime: 5.0, a: 1.1696, b: 0.5578 }),
-  new GasCompartment({ compartment: '1c', gas: 'he', halfTime: 1.88, a: 1.6189, b: 0.477 }),
+  new GasCompartment({ compartment: '1b', gas: 'he', halfTime: 1.88, a: 1.6189, b: 0.477 }),
   new GasCompartment({ compartment: '2', gas: 'n2', halfTime: 8.0, a: 1.0, b: 0.6514 }),
   new GasCompartment({ compartment: '2', gas: 'he', halfTime: 3.02, a: 1.383, b: 0.5747 }),
   new GasCompartment({ compartment: '3', gas: 'n2', halfTime: 12.5, a: 0.8618, b: 0.7222 }),

@@ -1,16 +1,16 @@
 import Sample from './Sample';
-import Gas, { Air } from './Gas';
+import GasMix, { AIR } from './Gas';
 
 type DiveArgs = {
   surfaceInterval?: number,
-  gases: Array<Gas>,
+  gases: Array<GasMix>,
   lastSample?: Sample,
   samples?: Array<Sample>,
 }
 
 export default class Dive {
   surfaceInterval?: number;
-  gases: Array<Gas>;
+  gases: Array<GasMix>;
   lastSample: Sample;
   samples: Array<Sample>;
 
@@ -24,7 +24,7 @@ export default class Dive {
       const { gases: [initialGas] } = this;
       this.lastSample = new Sample({ 
         depth: 0, 
-        gasMix: Air,
+        gasMix: AIR,
         time: 0,
         gasSwitch: initialGas,
       }),
@@ -34,7 +34,7 @@ export default class Dive {
 
   createNextDive = (
     { surfaceInterval, gases }: 
-    { surfaceInterval: number, gases: Array<Gas> }
+    { surfaceInterval: number, gases: Array<GasMix> }
   ): Dive => {
     const numberOfSamples = this.samples.length;
     
@@ -47,7 +47,7 @@ export default class Dive {
       throw new Error('The dive needs to end');
     }
 
-    const { gases: [initialGas] } = this;
+    const [initialGas] = gases;
 
     const initialSample = lastSample.createNextSample({
       depth: 0,
@@ -65,11 +65,11 @@ export default class Dive {
 
   addSample = (
     { depth, intervalTime, gasSwitch }:
-    { depth: number, intervalTime: number, gasSwitch?: Gas }
+    { depth: number, intervalTime: number, gasSwitch?: GasMix }
   ): void => {
     const nextSample = this.lastSample.createNextSample({
       depth, 
-      intervalTime, 
+      intervalTime,
       gasSwitch,
     });
     this.lastSample = nextSample;

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --clearCache"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,6 @@
     }
   },
   "lint-staged": {
-    "*.{js,css,md}": "prettier"
+    "*.{ts,js,css,md}": "prettier"
   }
 }

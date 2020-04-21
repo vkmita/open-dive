@@ -3,7 +3,7 @@ import { rateOfPressureChange } from './equations/pressure';
 // might be able to add transit or somehting later
 type GasType = 'back' | 'deco';
 
-type GasArgs = {
+type GasMixArgs = {
   he: number,
   o2: number,
   type: GasType,
@@ -17,12 +17,12 @@ export default class GasMix {
   o2: number;
   type: GasType;
 
-  constructor({ he, o2, type }: GasArgs) {
+  constructor({ he, o2, type }: GasMixArgs) {
     Object.assign(this, { he, o2, type });
 
     this.n2 = 1 - he - o2;
-    this.maxPPo2 = this.calcMaxPPo2();
-    this.mod = this.calcMod();
+    this.maxPPo2 = this.type === 'back' ? 1.4 : 1.6;
+    this.mod = this.maxPPo2 / o2;
   }
 
   R(
@@ -38,10 +38,6 @@ export default class GasMix {
     // "R" in the schreiner equation
     return pressureChange * this[gas];
   }
-
-  // TODO: make configurable
-  calcMaxPPo2 = (): 1.4 | 1.6 => this.type === 'back' ? 1.4 : 1.6;
-  calcMod = (): number => this.maxPPo2 / this.o2;
 }
 
-export const Air = new GasMix({ he: 0, o2: .21, type: 'back' });
+export const AIR = new GasMix({ he: 0, o2: .21, type: 'back' });
