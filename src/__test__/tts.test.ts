@@ -24,6 +24,6 @@ describe('tts', () => {
 
     lastSample = dive.lastSample;
 
-    expect(tts(lastSample)).toEqual(27);
+    expect(tts(lastSample)).toEqual(28.856010939086193);
   });
 });

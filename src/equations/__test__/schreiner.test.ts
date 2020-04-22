@@ -40,18 +40,36 @@ describe('schreiner', () => {
   });
 
   describe('solvedForTime', () => {
-    const p0 = 1.040976414487826;
-    const pAlv = AIR.n2.alveolarPressure({ depth: 40 });
-    const k = ZHL16B[4].k;
-    const ptt = 3.637480327659653;
+    it('returns time needed to get to a ptt pressure', () => {
+      const p0 = 1.040976414487826;
+      const pAlv = AIR.n2.alveolarPressure({ depth: 40 });
+      const k = ZHL16B[4].k;
+      const ptt = 3.637480327659653;
 
-    const t = solvedForTime({
-      ptt,
-      p0,
-      pAlv,
-      k,
+      const t = solvedForTime({
+        ptt,
+        p0,
+        pAlv,
+        k,
+      });
+
+      expect(t).toEqual(28);
     });
 
-    expect(t).toEqual(28);
+    it('helps with tts', () => {
+      const p0 = 1.040976414487826;
+      const pAlv = AIR.n2.alveolarPressure({ depth: 40 });
+      const k = ZHL16B[4].k;
+      const ptt = 3.637480327659653;
+
+      const t = solvedForTime({
+        ptt,
+        p0,
+        pAlv,
+        k,
+      });
+
+      expect(t).toEqual(28);
+    });
   });
 });

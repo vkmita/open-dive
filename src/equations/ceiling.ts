@@ -1,5 +1,4 @@
 import { DECO_STEP_SIZE } from '../constants';
-// import { solvedForTime as schreinerSolvedForTime } from './schreiner';
 
 // an ascent ceiling pressure for a compartment at a particular tissue pressure
 // pAmbTol = (pComp - a) * b
@@ -13,17 +12,28 @@ export const ascentCeiling = ({
   b: number;
 }) => (pComp - a) * b;
 
+export const ascentCeilingSolvedForPComp = ({
+  a,
+  b,
+  pAmbTol,
+}: {
+  a: number;
+  b: number;
+  pAmbTol: number;
+}) => pAmbTol / b + a;
+
 // ascent ceiling solved for pComp
+// pComp = (pAmbTol / b) + a
+
 // we can use this along with Schreiner equation to determine how long to stay
 // at a certain depth to
-// pComp = (pAmbTol / b) + a
 // export const ceilingStepTime = (
-//   { a, b, p0, pAmbTol }:
+//   { a, b, p0, pAlv, pAmbTol }:
 //   { a: number, b: number, p0: number, pAmbTol: number }
 // ) => {
-//   const pComp = (pAmbTol / b) + a;
+//   const pComp =
 
-//   return schreinerSolvedForTime({ ptt: pComp, p0, pAlv0, k })
+//   return schreinerSolvedForTime({ ptt: pComp, p0, pAlv, k })
 // }
 
 // ascent ceiling depth rounded to the greater step of 3 meters

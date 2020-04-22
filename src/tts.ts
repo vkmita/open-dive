@@ -1,34 +1,43 @@
 import Sample from './Sample';
-import { ceilingStep } from './equations/ceiling';
-import { MAX_ASCENT_RATE } from './constants';
+import { ceilingStep as calcCeilingStep } from './equations/ceiling';
+import {
+  MAX_ASCENT_RATE,
+  DECO_STEP_SIZE,
+  DECO_ASCENT_RATE,
+  SURFACE_ASCENT_RATE,
+} from './constants';
 
 // return the tts of the sample
 const tts = (sample: Sample, totalTime: number = 0) => {
-  const { ascentCeiling } = sample;
+  const { ascentCeiling, depth } = sample;
 
   if (!ascentCeiling) {
-    // we can now go to the surface
-    return totalTime + sample.depth / MAX_ASCENT_RATE;
+    const ascentRate = totalTime === 0 ? MAX_ASCENT_RATE : SURFACE_ASCENT_RATE;
+    // we can now go to the surface, woot
+    return totalTime + sample.depth / ascentRate;
   }
 
-  const { depth } = ascentCeiling;
-
   // ceiling stop does not change so stay for another minute
-  const nextCeilingStep = ceilingStep(depth);
-  if (nextCeilingStep === sample.depth) {
-    // figure out the exact time we need here
+  const ceilingStepDepth = calcCeilingStep(ascentCeiling.depth);
+
+  if (ceilingStepDepth === depth) {
+    // figure time needed before we can ascend to next step
+    const intervalTime = sample.stopTime({
+      targetDepth: ceilingStepDepth - DECO_STEP_SIZE,
+    });
 
     const nextSample = sample.createNextSample({
-      depth: nextCeilingStep,
-      intervalTime: 1,
+      depth,
+      intervalTime,
     });
-    return tts(nextSample, totalTime + 1);
+    return tts(nextSample, totalTime + intervalTime);
   }
 
   // ascend to ceiling
-  const timeToAscend = (sample.depth - nextCeilingStep) / MAX_ASCENT_RATE;
+  const ascentRate = totalTime === 0 ? MAX_ASCENT_RATE : DECO_ASCENT_RATE;
+  const timeToAscend = (depth - ceilingStepDepth) / ascentRate;
   const nextSample = sample.createNextSample({
-    depth: nextCeilingStep,
+    depth: ceilingStepDepth,
     intervalTime: timeToAscend,
   });
 

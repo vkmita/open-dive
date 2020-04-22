@@ -1,4 +1,4 @@
-import { ambientPressureDepth } from './equations/pressure';
+import { transform } from 'lodash';
 import ZHL16B from './ZHL16B';
 import { AIR } from './GasMix';
 
@@ -29,12 +29,6 @@ type SampleArgs = {
   ndl?: NDL;
   ascentCeiling?: AscentCeiling;
 };
-
-const EMPTY_TISSUES = () =>
-  ZHL16B.reduce(
-    (tissues, { compartment }) => (tissues[compartment] = {} && tissues),
-    {},
-  );
 
 export default class Sample {
   depth: number;
@@ -125,4 +119,13 @@ export default class Sample {
       ascentCeiling: ceiling,
     });
   };
+
+  // time needed to wait at current depth to ascend without exceeding mvalues
+  stopTime = ({ targetDepth }: { targetDepth: number }) =>
+    ZHL16B.reduce((maxStopTime, { compartment, inertGas }) => {
+      const sampleTissue = this.tissues[compartment][inertGas];
+      const stopTime = sampleTissue.stopTime({ targetDepth });
+
+      return maxStopTime < stopTime ? stopTime : maxStopTime;
+    }, 0);
 }

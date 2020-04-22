@@ -1,11 +1,14 @@
 import type GasCompartment from './GasCompartment';
 import { ATA } from './constants';
-import { ascentCeiling } from './equations/ceiling';
+import {
+  ascentCeiling,
+  ascentCeilingSolvedForPComp,
+} from './equations/ceiling';
 import schreiner, {
   solvedForTime as schreinerSolvedForTime,
 } from './equations/schreiner';
 import noDecompressionLimit from './equations/noDecompressionLimit';
-import { ambientPressureDepth } from './equations/pressure';
+import { ambientPressureDepth, ambientPressure } from './equations/pressure';
 import GasMix from './GasMix';
 import { MAX_ASCENT_RATE } from './constants';
 
@@ -55,7 +58,7 @@ export default class SampleTissue {
   }
 
   noStopTime() {
-    const { k, m0, inertGas, compartment } = this.gasCompartment;
+    const { k, m0, inertGas } = this.gasCompartment;
     const gas = this.gasMix[inertGas];
 
     // alveolar pressure at the surface
@@ -98,5 +101,28 @@ export default class SampleTissue {
 
     if (maxAscentPressure < ATA) return 0;
     return ambientPressureDepth(maxAscentPressure);
+  }
+
+  // time needed to wait at current depth to ascend without exceeding mvalues
+  stopTime({ targetDepth }) {
+    const { a, b, inertGas, k } = this.gasCompartment;
+    const targetDepthPressure = ambientPressure(targetDepth);
+    const gas = this.gasMix[inertGas];
+
+    const pComp = ascentCeilingSolvedForPComp({
+      a,
+      b,
+      pAmbTol: targetDepthPressure,
+    });
+
+    // console.log('pAlv', gas.alveolarPressure({ depth: this.depth }))
+    // console.log('pComp', pComp, 'pressure', this.pressure, 'compartment', this.gasCompartment.compartment);
+
+    return schreinerSolvedForTime({
+      k,
+      ptt: pComp,
+      p0: this.pressure,
+      pAlv: gas.alveolarPressure({ depth: this.depth }),
+    });
   }
 }
