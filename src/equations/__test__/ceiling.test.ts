@@ -1,4 +1,3 @@
-import { find } from 'lodash';
 import { ascentCeiling } from '../ceiling';
 import ZHL16B from '../../ZHL16B';
 

@@ -5,21 +5,12 @@ import schreiner, {
   solvedForTime as schreinerSolvedForTime,
 } from './equations/schreiner';
 import noDecompressionLimit from './equations/noDecompressionLimit';
-import {
-  alveolarPressure,
-  ambientPressure,
-  ambientPressureDepth,
-} from './equations/pressure';
+import { ambientPressureDepth } from './equations/pressure';
 import GasMix from './GasMix';
 import { MAX_ASCENT_RATE } from './constants';
 
 // associated with a Sample
 export default class SampleTissue {
-  // startTissuePressure: number; // bar
-  // gasRatio: number; // 0 - 1, ex: .79
-  // startDepth: number; // meters
-  // endDepth: number; // meters
-  // intervalTime: number; // minutes
   depth: number;
   gasMix: GasMix;
   gasCompartment: GasCompartment; // GasCompartment
@@ -36,10 +27,10 @@ export default class SampleTissue {
   }: {
     startTissuePressure?: number; // bar
     gasMix: GasMix;
-    startDepth?: number; // meters
-    endDepth: number; // meters
-    intervalTime?: number; // minutes
-    gasCompartment: GasCompartment; // GasCompartment)
+    startDepth?: number;
+    endDepth: number;
+    intervalTime?: number;
+    gasCompartment: GasCompartment;
     pressure?: number;
   }) {
     Object.assign(this, { depth: endDepth, gasMix, gasCompartment, pressure });
@@ -51,10 +42,7 @@ export default class SampleTissue {
 
       const R = gas.R({ startDepth, endDepth, time: intervalTime });
       // meters / minute
-      const startAlviolarPressure = alveolarPressure({
-        ambientPressure: ambientPressure(startDepth),
-        gasRatio: gas.ratio,
-      });
+      const startAlviolarPressure = gas.alveolarPressure({ depth: startDepth });
 
       this.pressure = schreiner({
         pAlv: startAlviolarPressure,
