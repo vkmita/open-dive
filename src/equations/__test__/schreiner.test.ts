@@ -5,10 +5,13 @@ import schreiner, { solvedForTime } from '../schreiner';
 
 describe('schreiner', () => {
   it('returns a new tissue pressure', () => {
-    let p0 = AIR.n2;
-    let pAlv = AIR.surfaceN2AlveolarPressure();
-    let R = AIR.R({ startDepth: 0, endDepth: 40, time: 2, gas: 'n2' });
-    let k = ZHL16B[4].k;
+    const gas = AIR.n2;
+    const gasCompartment = ZHL16B[4];
+
+    let p0 = gas.ratio;
+    let pAlv = gas.alveolarPressure({ depth: 0 });
+    let R = gas.R({ startDepth: 0, endDepth: 40, time: 2 });
+    let k = gasCompartment.k;
     let t = 2;
 
     let ptt = schreiner({
@@ -22,12 +25,8 @@ describe('schreiner', () => {
     expect(ptt).toEqual(1.040976414487826);
 
     p0 = 1.040976414487826;
-    pAlv = alveolarPressure({
-      ambientPressure: ambientPressure(40),
-      gasRatio: AIR.n2,
-    });
-    R = AIR.R({ startDepth: 40, endDepth: 40, time: 28, gas: 'n2' });
-    k = ZHL16B[4].k;
+    pAlv = gas.alveolarPressure({ depth: 40 });
+    R = gas.R({ startDepth: 40, endDepth: 40, time: 28 });
     t = 28;
 
     ptt = schreiner({
@@ -43,17 +42,14 @@ describe('schreiner', () => {
 
   describe('solvedForTime', () => {
     const p0 = 1.040976414487826;
-    const pAlv0 = alveolarPressure({
-      ambientPressure: ambientPressure(40),
-      gasRatio: AIR.n2,
-    });
+    const pAlv = AIR.n2.alveolarPressure({ depth: 40 });
     const k = ZHL16B[4].k;
     const ptt = 3.637480327659653;
 
     const t = solvedForTime({
       ptt,
       p0,
-      pAlv0,
+      pAlv,
       k,
     });
 

@@ -51,15 +51,15 @@ export default class Sample {
 
     if (time === 0) {
       // all tissues fully saturated with air
-      const initalN2Pressure = AIR.surfaceN2AlveolarPressure();
+      const initalN2Pressure = AIR.n2.alveolarPressure({ depth: 0 });
 
       this.tissues = ZHL16B.reduce((tissues, gasCompartment) => {
-        const { gas, compartment } = gasCompartment;
+        const { inertGas, compartment } = gasCompartment;
         tissues[compartment] = tissues[compartment] || {};
 
-        const initialPressure = gas === 'he' ? 0 : initalN2Pressure;
+        const initialPressure = inertGas === 'he' ? 0 : initalN2Pressure;
 
-        tissues[compartment][gas] = new SampleTissue({
+        tissues[compartment][inertGas] = new SampleTissue({
           pressure: initialPressure,
           gasMix,
           gasCompartment,
@@ -84,11 +84,11 @@ export default class Sample {
     // the sample ndl and ceiling
     let ndl: NDL, ceiling: AscentCeiling;
     const nextTissues = ZHL16B.reduce((tissues, gasCompartment) => {
-      const { compartment, gas } = gasCompartment;
+      const { compartment, inertGas } = gasCompartment;
       tissues[compartment] = tissues[compartment] || {};
 
       const sampleTissue = new SampleTissue({
-        startTissuePressure: this.tissues[compartment][gas].pressure,
+        startTissuePressure: this.tissues[compartment][inertGas].pressure,
         gasMix,
         startDepth: this.depth,
         endDepth: depth,
@@ -112,7 +112,7 @@ export default class Sample {
         };
       }
 
-      tissues[compartment][gas] = sampleTissue;
+      tissues[compartment][inertGas] = sampleTissue;
       return tissues;
     }, {});
 

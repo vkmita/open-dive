@@ -44,12 +44,14 @@ export default class SampleTissue {
     Object.assign(this, { depth: endDepth, gasMix, gasCompartment, pressure });
 
     if (!pressure) {
-      const { gas } = gasCompartment;
-      const R = gasMix.R({ startDepth, endDepth, time: intervalTime, gas });
+      const { inertGas } = gasCompartment;
+      const gas = gasMix[inertGas];
+
+      const R = gas.R({ startDepth, endDepth, time: intervalTime });
       // meters / minute
       const startAlviolarPressure = alveolarPressure({
         ambientPressure: ambientPressure(startDepth),
-        gasRatio: gasMix[gasCompartment.gas],
+        gasRatio: gas.ratio,
       });
 
       this.pressure = schreiner({
@@ -63,17 +65,11 @@ export default class SampleTissue {
   }
 
   noStopTime() {
-    const { a, b, k, gas } = this.gasCompartment;
-    const gasRatio = this.gasMix[gas];
-
-    const surfacePressure = ambientPressure(0);
-    const depthPressure = ambientPressure(this.depth);
+    const { k, m0, inertGas, compartment } = this.gasCompartment;
+    const gas = this.gasMix[inertGas];
 
     // alveolar pressure at the surface
-    const pAlv0 = alveolarPressure({
-      ambientPressure: depthPressure,
-      gasRatio,
-    });
+    const pAlv = gas.alveolarPressure({ depth: this.depth });
     // time needed to ascend to the surface
     const tAsc = this.depth / MAX_ASCENT_RATE;
 
@@ -81,25 +77,24 @@ export default class SampleTissue {
     // max partial pressure of gas the tissue can have at the current depth
     const maxPressureAtDepth = noDecompressionLimit({
       k,
-      m0: a + surfacePressure / b,
-      R:
-        rateOfPressureChange({
-          startDepth: this.depth,
-          endDepth: 0,
-          time: tAsc,
-        }) * gasRatio,
-      pAlv0,
+      m0,
+      R: gas.R({
+        startDepth: this.depth,
+        endDepth: 0,
+        time: tAsc,
+      }),
+      pAlv,
       tAsc: this.depth / MAX_ASCENT_RATE,
     });
 
     // we never hit a no stop time
-    if (maxPressureAtDepth > pAlv0 * gasRatio) return 99;
+    if (maxPressureAtDepth > pAlv) return 99;
 
     const noStopTime = schreinerSolvedForTime({
       k,
       ptt: maxPressureAtDepth,
       p0: this.pressure,
-      pAlv0,
+      pAlv,
     });
 
     return noStopTime < 0 ? 0 : noStopTime;

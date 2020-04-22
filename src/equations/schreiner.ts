@@ -27,11 +27,11 @@ export default ({
 export const solvedForTime = ({
   ptt,
   p0,
-  pAlv0,
+  pAlv,
   k,
 }: {
   ptt: number;
   p0: number;
-  pAlv0: number;
+  pAlv: number;
   k: number;
-}): number => -Math.log((ptt - pAlv0) / (-pAlv0 + p0)) / k;
+}): number => -Math.log((ptt - pAlv) / (-pAlv + p0)) / k;

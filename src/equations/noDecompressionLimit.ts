@@ -1,21 +1,21 @@
 // no decompression limit equation (no-stop time by Schreiner)
 //
-// pAlv0: pressure of inert gas in the lungs at the surface
+// pAlv: pressure of inert gas at depth
 // tAsc: ascent time
 // R: rate of pressure change
 // k: gas decay constant
 // m0: surfacing M-value
 export default ({
   m0,
-  pAlv0,
+  pAlv,
   R,
   k,
   tAsc,
 }: {
   m0: number;
-  pAlv0: number;
+  pAlv: number;
   R: number;
   k: number;
   tAsc: number;
 }): number =>
-  (m0 - pAlv0 - R * (tAsc - 1 / k)) * Math.exp(k * tAsc) + pAlv0 - R / k;
+  (m0 - pAlv - R * (tAsc - 1 / k)) * Math.exp(k * tAsc) + pAlv - R / k;

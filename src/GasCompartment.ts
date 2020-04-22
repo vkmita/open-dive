@@ -1,9 +1,9 @@
 import { ambientPressure } from './equations/pressure';
 
-type InterGas = 'he' | 'n2';
+type InertGas = 'he' | 'n2';
 
 export default class GasCompartment {
-  gas: InterGas;
+  inertGas: InertGas;
   compartment: 'string';
   halfTime: number;
   a: number;
@@ -15,16 +15,16 @@ export default class GasCompartment {
     a,
     b,
     compartment,
-    gas,
+    inertGas,
     halfTime,
   }: {
     a: number;
     b: number;
     compartment: string;
-    gas: InterGas;
+    inertGas: InertGas;
     halfTime: number;
   }) {
-    Object.assign(this, { a, b, compartment, gas, halfTime });
+    Object.assign(this, { a, b, compartment, inertGas, halfTime });
 
     // the k in the schreiner equation
     this.k = Math.LN2 / halfTime;
