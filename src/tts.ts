@@ -4,17 +4,17 @@ import { MAX_ASCENT_RATE } from './constants';
 
 // return the tts of the sample
 const tts = (sample: Sample, totalTime: number = 0) => {
-  const {
-    ascentCeiling: { depth: ceilingDepth },
-  } = sample;
+  const { ascentCeiling } = sample;
 
-  if (ceilingDepth === 0) {
+  if (!ascentCeiling) {
     // we can now go to the surface
     return totalTime + sample.depth / MAX_ASCENT_RATE;
   }
 
+  const { depth } = ascentCeiling;
+
   // ceiling stop does not change so stay for another minute
-  const nextCeilingStep = ceilingStep(ceilingDepth);
+  const nextCeilingStep = ceilingStep(depth);
   if (nextCeilingStep === sample.depth) {
     // figure out the exact time we need here
 

@@ -16,7 +16,6 @@ type NDL = {
 };
 
 type AscentCeiling = {
-  pressure: number;
   depth: number;
   gasCompartment: GasCompartment;
 };
@@ -96,18 +95,18 @@ export default class Sample {
         gasCompartment,
       });
 
-      const noStopTime = sampleTissue.noStopTime();
-
-      if (!ndl || noStopTime < ndl.value) {
-        ndl = { value: noStopTime, gasCompartment };
-      }
-
       const ascentCeiling = sampleTissue.ascentCeiling();
 
-      if (!ceiling || ascentCeiling > ceiling.pressure) {
+      // only calculate no stop time if there is no ascent ceiling
+      if (ascentCeiling === 0) {
+        const noStopTime = sampleTissue.noStopTime();
+
+        if (noStopTime !== 0 && (!ndl || noStopTime < ndl.value)) {
+          ndl = { value: noStopTime, gasCompartment };
+        }
+      } else if (!ceiling || ascentCeiling > ceiling.depth) {
         ceiling = {
-          pressure: ascentCeiling,
-          depth: ambientPressureDepth(ascentCeiling),
+          depth: ascentCeiling,
           gasCompartment,
         };
       }

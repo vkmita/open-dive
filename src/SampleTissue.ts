@@ -1,4 +1,5 @@
 import type GasCompartment from './GasCompartment';
+import { ATA } from './constants';
 import { ascentCeiling } from './equations/ceiling';
 import schreiner, {
   solvedForTime as schreinerSolvedForTime,
@@ -7,7 +8,7 @@ import noDecompressionLimit from './equations/noDecompressionLimit';
 import {
   alveolarPressure,
   ambientPressure,
-  rateOfPressureChange,
+  ambientPressureDepth,
 } from './equations/pressure';
 import GasMix from './GasMix';
 import { MAX_ASCENT_RATE } from './constants';
@@ -43,7 +44,8 @@ export default class SampleTissue {
   }) {
     Object.assign(this, { depth: endDepth, gasMix, gasCompartment, pressure });
 
-    if (!pressure) {
+    // pressure an be 0, !pressure is no bueno
+    if (pressure == null) {
       const { inertGas } = gasCompartment;
       const gas = gasMix[inertGas];
 
@@ -88,7 +90,7 @@ export default class SampleTissue {
     });
 
     // we never hit a no stop time
-    if (maxPressureAtDepth > pAlv) return 99;
+    if (maxPressureAtDepth > pAlv) return Number.MAX_VALUE;
 
     const noStopTime = schreinerSolvedForTime({
       k,
@@ -104,6 +106,9 @@ export default class SampleTissue {
     const { a, b } = this.gasCompartment;
     const pComp = this.pressure;
 
-    return ascentCeiling({ a, b, pComp });
+    const maxAscentPressure = ascentCeiling({ a, b, pComp });
+
+    if (maxAscentPressure < ATA) return 0;
+    return ambientPressureDepth(maxAscentPressure);
   }
 }
