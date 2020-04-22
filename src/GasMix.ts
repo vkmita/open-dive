@@ -46,5 +46,3 @@ export default class GasMix {
     return pressureChange * this[gas];
   }
 }
-
-export const AIR = new GasMix({ he: 0, o2: 0.21, type: 'back' });
