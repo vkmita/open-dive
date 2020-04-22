@@ -1,6 +1,6 @@
 import { ambientPressureDepth } from './equations/pressure';
 import ZHL16B from './ZHL16B';
-import AIR from './Air';
+import { AIR } from './GasMix';
 
 import type GasMix from './GasMix';
 import type GasCompartment from './GasCompartment';

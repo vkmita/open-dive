@@ -1,4 +1,4 @@
-import AIR from './Air';
+import { AIR } from './GasMix';
 import Sample from './Sample';
 import GasMix from './GasMix';
 

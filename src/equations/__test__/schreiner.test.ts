@@ -1,5 +1,4 @@
-import { alveolarPressure, ambientPressure } from '../pressure';
-import AIR from '../../Air';
+import { AIR } from '../../GasMix';
 import ZHL16B from '../../ZHL16B';
 import schreiner, { solvedForTime } from '../schreiner';
 
