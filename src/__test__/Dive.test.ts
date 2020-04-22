@@ -1,5 +1,5 @@
 import Dive from '../Dive';
-import { AIR } from '../GasMix';
+import AIR from '../Air';
 
 test('no previous dive', () => {
   const dive = new Dive({

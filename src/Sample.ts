@@ -1,10 +1,6 @@
-import {
-  alveolarPressure,
-  ambientPressure,
-  ambientPressureDepth,
-} from './equations/pressure';
+import { ambientPressureDepth } from './equations/pressure';
 import ZHL16B from './ZHL16B';
-import { AIR } from './GasMix';
+import AIR from './Air';
 
 import type GasMix from './GasMix';
 import type GasCompartment from './GasCompartment';
@@ -55,10 +51,7 @@ export default class Sample {
 
     if (time === 0) {
       // all tissues fully saturated with air
-      const initalN2Pressure = alveolarPressure({
-        ambientPressure: ambientPressure(0),
-        gasRatio: AIR.n2,
-      });
+      const initalN2Pressure = AIR.surfaceN2AlveolarPressure();
 
       this.tissues = ZHL16B.reduce((tissues, gasCompartment) => {
         const { gas, compartment } = gasCompartment;
