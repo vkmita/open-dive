@@ -1,5 +1,5 @@
 import Sample from './Sample';
-import GasMix, { AIR } from './Gas';
+import GasMix, { AIR } from './GasMix';
 
 type DiveArgs = {
   surfaceInterval?: number;

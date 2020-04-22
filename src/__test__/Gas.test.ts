@@ -1,4 +1,4 @@
-import GasMix from '../Gas';
+import GasMix from '../GasMix';
 
 describe('Gas', () => {
   it('automatically sets n2 and MaxPP02 and mod', () => {

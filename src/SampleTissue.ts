@@ -9,7 +9,7 @@ import {
   ambientPressure,
   rateOfPressureChange,
 } from './equations/pressure';
-import GasMix from './Gas';
+import GasMix from './GasMix';
 import { MAX_ASCENT_RATE } from './constants';
 
 // associated with a Sample

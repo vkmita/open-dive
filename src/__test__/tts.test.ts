@@ -1,4 +1,4 @@
-import { AIR } from '../Gas';
+import { AIR } from '../GasMix';
 import Dive from '../Dive';
 import tts from '../tts';
 
