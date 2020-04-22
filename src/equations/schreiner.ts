@@ -23,6 +23,7 @@ export default ({
 }): number => pAlv + R * (t - 1 / k) - (pAlv - p0 - R / k) * Math.exp(-k * t);
 
 // The Shreiner equation solved for time with R being zero (no pressure change)
+// t = -ln(( Pt(t) - pAlv ) / (-pAlv + p0)) / k
 export const solvedForTime = ({
   ptt,
   p0,
