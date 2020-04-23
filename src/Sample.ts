@@ -1,4 +1,3 @@
-import { transform } from 'lodash';
 import ZHL16B from './ZHL16B';
 import { AIR } from './GasMix';
 
@@ -20,16 +19,6 @@ type AscentCeiling = {
   gasCompartment: GasCompartment;
 };
 
-type SampleArgs = {
-  depth: number;
-  gasMix: GasMix;
-  time: number;
-  gasSwitch?: GasMix;
-  tissues?: Tissues;
-  ndl?: NDL;
-  ascentCeiling?: AscentCeiling;
-};
-
 export default class Sample {
   depth: number;
   gasMix: GasMix;
@@ -39,7 +28,19 @@ export default class Sample {
   ndl?: NDL;
   ascentCeiling?: AscentCeiling;
 
-  constructor({ time, gasMix, ...args }: SampleArgs) {
+  constructor({
+    time,
+    gasMix,
+    ...args
+  }: {
+    depth: number;
+    gasMix: GasMix;
+    time: number;
+    gasSwitch?: GasMix;
+    tissues?: Tissues;
+    ndl?: NDL;
+    ascentCeiling?: AscentCeiling;
+  }) {
     Object.assign(this, { time, gasMix, ...args });
 
     if (time === 0) {
