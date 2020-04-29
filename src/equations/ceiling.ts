@@ -1,26 +1,32 @@
 import { DECO_STEP_SIZE } from '../constants';
 
 // an ascent ceiling pressure for a compartment at a particular tissue pressure
-// pAmbTol = (pComp - a) * b
+// pAmbTol = (pComp - a * GF) / ( b
 export const ascentCeiling = ({
   pComp,
   a,
   b,
+  gradientFactor = 1.0,
 }: {
   pComp: number;
   a: number;
   b: number;
-}) => (pComp - a) * b;
+  gradientFactor?: number;
+}) =>
+  (pComp - a * gradientFactor) / (gradientFactor / b + 1.0 - gradientFactor);
 
 export const ascentCeilingSolvedForPComp = ({
   a,
   b,
   pAmbTol,
+  gradientFactor = 1,
 }: {
   a: number;
   b: number;
   pAmbTol: number;
-}) => pAmbTol / b + a;
+  gradientFactor?: number;
+}) =>
+  pAmbTol * (gradientFactor / b + 1.0 - gradientFactor) + a * gradientFactor;
 
 // ascent ceiling solved for pComp
 // pComp = (pAmbTol / b) + a

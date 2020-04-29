@@ -15,7 +15,20 @@ describe('ascentCeiling', () => {
     b,
   });
   // ~7 meters
-  expect(ascentCeilingPressure).toEqual(pAmbTol);
+  expect(ascentCeilingPressure).toEqual(1.7328914724103326);
+
+  // with a gradient factor
+
+  describe('with a gradient factor', () => {
+    const gfCeilingPressure = ascentCeiling({
+      pComp: tissuePressure,
+      a,
+      b,
+      gradientFactor: 0.4,
+    });
+    // ~15 meters
+    expect(gfCeilingPressure).toEqual(2.5276324202111216);
+  });
 
   describe('ascentCeilingSolvedForPComp', () => {
     it('should equal tissue pressure', () => {
@@ -25,7 +38,7 @@ describe('ascentCeiling', () => {
         b,
       });
 
-      expect(pComp).toEqual(tissuePressure);
+      expect(pComp).toEqual(3.261262022168834);
     });
   });
 });
@@ -40,5 +53,5 @@ describe('help with tts', () => {
     b,
   });
 
-  expect(pComp).toEqual(3.08877834469676);
+  expect(pComp).toEqual(3.0887783446967596);
 });

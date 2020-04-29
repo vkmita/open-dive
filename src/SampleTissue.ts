@@ -12,20 +12,26 @@ import { ambientPressureDepth, ambientPressure } from './equations/pressure';
 import GasMix from './GasMix';
 import { MAX_ASCENT_RATE } from './constants';
 
+import type { GradientFactor } from './Dive';
+
 // associated with a Sample
 export default class SampleTissue {
   depth: number;
   gasMix: GasMix;
   gasCompartment: GasCompartment; // GasCompartment
+  gradientFactor: GradientFactor;
+  gfLowDepth: number;
   pressure: number;
 
   constructor({
     startTissuePressure, // bar
     gasMix, // 0 - 1, ex: .79
+    gradientFactor,
     startDepth, // meters
     endDepth, // meters
     intervalTime, // minutes
     gasCompartment, // GasCompartment
+    gfLowDepth,
     pressure,
   }: {
     startTissuePressure?: number; // bar
@@ -34,9 +40,21 @@ export default class SampleTissue {
     endDepth: number;
     intervalTime?: number;
     gasCompartment: GasCompartment;
+    gradientFactor: GradientFactor;
+    gfLowDepth?: number;
     pressure?: number;
   }) {
-    Object.assign(this, { depth: endDepth, gasMix, gasCompartment, pressure });
+    Object.assign(this, {
+      depth: endDepth,
+      gasMix,
+      gasCompartment,
+      gfLowDepth,
+      gradientFactor,
+      pressure,
+    });
+
+    if (!gfLowDepth) {
+    }
 
     // pressure an be 0, !pressure is no bueno
     if (pressure == null) {
@@ -93,18 +111,43 @@ export default class SampleTissue {
     return noStopTime < 0 ? 0 : noStopTime;
   }
 
-  ascentCeiling() {
+  maxGradientFactor = (): number => {
+    const { a, b } = this.gasCompartment;
+    const pComp = this.pressure;
+    const { gradientFactor } = this;
+
+    const gfLowDepth =
+      this.gfLowDepth ||
+      this.depth -
+        (this.depth - ambientPressureDepth(ascentCeiling({ a, b, pComp }))) *
+          gradientFactor.low;
+
+    // 0 or NaN
+    if (!gfLowDepth) return gradientFactor.high;
+
+    return (
+      gradientFactor.high -
+      ((gradientFactor.high - gradientFactor.low) / gfLowDepth) * this.depth
+    );
+  };
+
+  ascentCeiling = (): number => {
     const { a, b } = this.gasCompartment;
     const pComp = this.pressure;
 
-    const maxAscentPressure = ascentCeiling({ a, b, pComp });
+    const gradientFactor = this.maxGradientFactor();
 
-    if (maxAscentPressure < ATA) return 0;
-    return ambientPressureDepth(maxAscentPressure);
-  }
+    const maxAscentPressure = ascentCeiling({ a, b, pComp, gradientFactor });
+
+    if (!maxAscentPressure) return 0;
+
+    // we need to round here after adding gradient factors :/
+    // TODO: figure out the math that's causing this
+    return Number(ambientPressureDepth(maxAscentPressure).toFixed(4));
+  };
 
   // time needed to wait at current depth to ascend without exceeding mvalues
-  stopTime({ targetDepth }) {
+  stopTime = ({ targetDepth }): number => {
     const { a, b, inertGas, k } = this.gasCompartment;
     const targetDepthPressure = ambientPressure(targetDepth);
     const gas = this.gasMix[inertGas];
@@ -113,10 +156,8 @@ export default class SampleTissue {
       a,
       b,
       pAmbTol: targetDepthPressure,
+      gradientFactor: this.maxGradientFactor(),
     });
-
-    // console.log('pAlv', gas.alveolarPressure({ depth: this.depth }))
-    // console.log('pComp', pComp, 'pressure', this.pressure, 'compartment', this.gasCompartment.compartment);
 
     return schreinerSolvedForTime({
       k,
@@ -124,5 +165,5 @@ export default class SampleTissue {
       p0: this.pressure,
       pAlv: gas.alveolarPressure({ depth: this.depth }),
     });
-  }
+  };
 }

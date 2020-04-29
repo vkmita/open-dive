@@ -8,7 +8,7 @@ import {
 } from './constants';
 
 // return the tts of the sample
-const tts = (sample: Sample, totalTime: number = 0) => {
+const tts = ({ sample, totalTime }: { sample: Sample; totalTime: number }) => {
   const { ascentCeiling, depth } = sample;
 
   if (!ascentCeiling) {
@@ -29,8 +29,12 @@ const tts = (sample: Sample, totalTime: number = 0) => {
     const nextSample = sample.createNextSample({
       depth,
       intervalTime,
+      usePreviousGFLowDepth: true,
     });
-    return tts(nextSample, totalTime + intervalTime);
+    return tts({
+      sample: nextSample,
+      totalTime: totalTime + intervalTime,
+    });
   }
 
   // ascend to ceiling
@@ -39,9 +43,10 @@ const tts = (sample: Sample, totalTime: number = 0) => {
   const nextSample = sample.createNextSample({
     depth: ceilingStepDepth,
     intervalTime: timeToAscend,
+    usePreviousGFLowDepth: true,
   });
 
-  return tts(nextSample, totalTime + timeToAscend);
+  return tts({ sample: nextSample, totalTime: totalTime + timeToAscend });
 };
 
 export default tts;

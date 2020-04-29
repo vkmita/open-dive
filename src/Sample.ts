@@ -1,9 +1,12 @@
+import { get } from 'lodash';
 import ZHL16B from './ZHL16B';
 import { AIR } from './GasMix';
+import SampleTissue from './SampleTissue';
+import tts from './tts';
 
 import type GasMix from './GasMix';
 import type GasCompartment from './GasCompartment';
-import SampleTissue from './SampleTissue';
+import type { GradientFactor } from './Dive';
 
 type Tissues = {
   [compartment: string]: { he: SampleTissue; n2: SampleTissue };
@@ -24,6 +27,7 @@ export default class Sample {
   gasMix: GasMix;
   time: number;
   gasSwitch: GasMix;
+  gradientFactor: GradientFactor;
   tissues: Tissues;
   ndl?: NDL;
   ascentCeiling?: AscentCeiling;
@@ -31,17 +35,19 @@ export default class Sample {
   constructor({
     time,
     gasMix,
+    gradientFactor,
     ...args
   }: {
     depth: number;
     gasMix: GasMix;
     time: number;
     gasSwitch?: GasMix;
+    gradientFactor: GradientFactor;
     tissues?: Tissues;
     ndl?: NDL;
     ascentCeiling?: AscentCeiling;
   }) {
-    Object.assign(this, { time, gasMix, ...args });
+    Object.assign(this, { time, gradientFactor, gasMix, ...args });
 
     if (time === 0) {
       // all tissues fully saturated with air
@@ -57,6 +63,7 @@ export default class Sample {
           pressure: initialPressure,
           gasMix,
           gasCompartment,
+          gradientFactor,
           endDepth: 0,
         });
         return tissues;
@@ -68,10 +75,12 @@ export default class Sample {
     depth,
     intervalTime,
     gasSwitch,
+    usePreviousGFLowDepth,
   }: {
     depth: number;
     intervalTime: number;
     gasSwitch?: GasMix;
+    usePreviousGFLowDepth?: true;
   }) => {
     const gasMix = this.gasSwitch || this.gasMix;
 
@@ -81,13 +90,17 @@ export default class Sample {
       const { compartment, inertGas } = gasCompartment;
       tissues[compartment] = tissues[compartment] || {};
 
+      const previousSampleTissue = this.tissues[compartment][inertGas];
+
       const sampleTissue = new SampleTissue({
-        startTissuePressure: this.tissues[compartment][inertGas].pressure,
+        startTissuePressure: previousSampleTissue.pressure,
         gasMix,
         startDepth: this.depth,
         endDepth: depth,
         intervalTime,
         gasCompartment,
+        gradientFactor: this.gradientFactor,
+        gfLowDepth: usePreviousGFLowDepth && previousSampleTissue.gfLowDepth,
       });
 
       const ascentCeiling = sampleTissue.ascentCeiling();
@@ -118,6 +131,7 @@ export default class Sample {
       tissues: nextTissues,
       ndl,
       ascentCeiling: ceiling,
+      gradientFactor: this.gradientFactor,
     });
   };
 
@@ -129,4 +143,8 @@ export default class Sample {
 
       return maxStopTime < stopTime ? stopTime : maxStopTime;
     }, 0);
+
+  tts = () => {
+    return tts({ sample: this, totalTime: 0 });
+  };
 }

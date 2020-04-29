@@ -6,6 +6,10 @@ describe('Sample', () => {
     depth: 0,
     gasMix: AIR,
     time: 0,
+    gradientFactor: {
+      high: 1,
+      low: 1,
+    },
   });
   describe('constructor', () => {
     describe('when time === 0', () => {
@@ -72,6 +76,10 @@ describe('Sample', () => {
         gasMix: AIR,
         time: 0,
         gasSwitch: nitrox,
+        gradientFactor: {
+          high: 1,
+          low: 1,
+        },
       });
 
       const nextSample = gasSwitchSample.createNextSample({
@@ -112,7 +120,7 @@ describe('Sample', () => {
       nextSample = nextSample.createNextSample({ depth: 40, intervalTime: 28 });
       nextSample = nextSample.createNextSample({ depth: 9, intervalTime: 3.1 });
       expect(nextSample.stopTime({ targetDepth: 6 })).toEqual(
-        0.8052835895029752,
+        0.8052835895029793,
       );
       nextSample = nextSample.createNextSample({ depth: 9, intervalTime: 1 });
       nextSample = nextSample.createNextSample({ depth: 6, intervalTime: 1 });
@@ -122,7 +130,7 @@ describe('Sample', () => {
       nextSample = nextSample.createNextSample({ depth: 6, intervalTime: 6 });
       nextSample = nextSample.createNextSample({ depth: 3, intervalTime: 1 });
       expect(nextSample.stopTime({ targetDepth: 0 })).toEqual(
-        13.915271426753778,
+        13.915271426753808,
       );
     });
   });

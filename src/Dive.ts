@@ -2,11 +2,9 @@ import { AIR } from './GasMix';
 import Sample from './Sample';
 import GasMix from './GasMix';
 
-type DiveArgs = {
-  surfaceInterval?: number;
-  gases: Array<GasMix>;
-  lastSample?: Sample;
-  samples?: Array<Sample>;
+export type GradientFactor = {
+  high: number;
+  low: number;
 };
 
 export default class Dive {
@@ -16,8 +14,29 @@ export default class Dive {
   samples: Array<Sample>;
 
   // TODO please add TypeScript
-  constructor(args: DiveArgs) {
-    Object.assign(this, args);
+  constructor({
+    surfaceInterval,
+    gases,
+    lastSample,
+    samples,
+    gradientFactor = {
+      high: 1,
+      low: 1,
+    },
+  }: {
+    surfaceInterval?: number;
+    gases: Array<GasMix>;
+    lastSample?: Sample;
+    samples?: Array<Sample>;
+    gradientFactor?: GradientFactor;
+  }) {
+    Object.assign(this, {
+      surfaceInterval,
+      gradientFactor,
+      gases,
+      lastSample,
+      samples,
+    });
 
     // for now just use the first gas
     // TODO: gas switches
@@ -25,13 +44,14 @@ export default class Dive {
       const {
         gases: [initialGas],
       } = this;
-      (this.lastSample = new Sample({
+      this.lastSample = new Sample({
         depth: 0,
         gasMix: AIR,
         time: 0,
         gasSwitch: initialGas,
-      })),
-        (this.samples = [this.lastSample]);
+        gradientFactor,
+      });
+      this.samples = [this.lastSample];
     }
   }
 

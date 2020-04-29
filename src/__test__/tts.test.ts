@@ -15,7 +15,7 @@ describe('tts', () => {
 
     let lastSample = dive.lastSample;
 
-    expect(tts(lastSample)).toEqual(4);
+    expect(tts({ sample: lastSample, totalTime: 0 })).toEqual(4);
 
     dive.addSample({
       depth: 40,
@@ -24,6 +24,8 @@ describe('tts', () => {
 
     lastSample = dive.lastSample;
 
-    expect(tts(lastSample)).toEqual(28.856010939086193);
+    expect(tts({ sample: lastSample, totalTime: 0 })).toEqual(
+      28.85601093908624,
+    );
   });
 });
