@@ -76,16 +76,19 @@ export default class Sample {
     intervalTime,
     gasSwitch,
     usePreviousGFLowDepth,
+    gradientFactor,
   }: {
     depth: number;
     intervalTime: number;
     gasSwitch?: GasMix;
     usePreviousGFLowDepth?: true;
+    gradientFactor?: GradientFactor;
   }) => {
     const gasMix = this.gasSwitch || this.gasMix;
 
     // the sample ndl and ceiling
     let ndl: NDL, ceiling: AscentCeiling;
+
     const nextTissues = ZHL16B.reduce((tissues, gasCompartment) => {
       const { compartment, inertGas } = gasCompartment;
       tissues[compartment] = tissues[compartment] || {};
@@ -99,7 +102,7 @@ export default class Sample {
         endDepth: depth,
         intervalTime,
         gasCompartment,
-        gradientFactor: this.gradientFactor,
+        gradientFactor: gradientFactor || this.gradientFactor,
         gfLowDepth: usePreviousGFLowDepth && previousSampleTissue.gfLowDepth,
       });
 
@@ -131,7 +134,7 @@ export default class Sample {
       tissues: nextTissues,
       ndl,
       ascentCeiling: ceiling,
-      gradientFactor: this.gradientFactor,
+      gradientFactor: gradientFactor || this.gradientFactor,
     });
   };
 
