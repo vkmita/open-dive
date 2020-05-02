@@ -13,7 +13,7 @@ describe('tts', () => {
       intervalTime: 2,
     });
 
-    let lastSample = dive.lastSample;
+    let lastSample = dive.lastSample();
 
     expect(tts({ sample: lastSample, totalTime: 0 })).toEqual(4);
 
@@ -22,7 +22,7 @@ describe('tts', () => {
       intervalTime: 28,
     });
 
-    lastSample = dive.lastSample;
+    lastSample = dive.lastSample();
 
     expect(tts({ sample: lastSample, totalTime: 0 })).toEqual(
       28.85601093908624,

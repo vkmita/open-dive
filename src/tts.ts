@@ -9,7 +9,8 @@ import {
 
 // return the tts of the sample
 const tts = ({ sample, totalTime }: { sample: Sample; totalTime: number }) => {
-  const { ascentCeiling, depth } = sample;
+  const { depth } = sample;
+  const ascentCeiling = sample.ascentCeiling();
 
   if (!ascentCeiling) {
     const ascentRate = totalTime === 0 ? MAX_ASCENT_RATE : SURFACE_ASCENT_RATE;

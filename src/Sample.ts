@@ -1,4 +1,3 @@
-import { get } from 'lodash';
 import ZHL16B from './ZHL16B';
 import { AIR } from './GasMix';
 import SampleTissue from './SampleTissue';
@@ -8,20 +7,57 @@ import type GasMix from './GasMix';
 import type GasCompartment from './GasCompartment';
 import type { GradientFactor } from './Dive';
 
-type Tissues = {
-  [compartment: string]: { he: SampleTissue; n2: SampleTissue };
-};
-
-type NDL = {
-  value: number;
-  gasCompartment: GasCompartment;
-};
-
+/**
+ * A type representing the ascent ceiling at the moment of the sample
+ * @typedef AscentCeiling
+ * @property depth - The depth in which one can ascend to before needing a
+ *   stop
+ * @property gasCompartment - An object representing the leading compartment
+ *   responsible for the ascent celing depth
+ */
 type AscentCeiling = {
   depth: number;
   gasCompartment: GasCompartment;
 };
 
+/**
+ * A type representing the ndl at the moment of the sample
+ * @typedef NDL
+ * @property value - The number of seconds one can stay at current depth before
+ *   needing to ascend without needing decompression stops
+ * @property gasCompartment - An object representing the leading compartment
+ *   responsible for the ndl value
+ */
+type NDL = {
+  value: number;
+  gasCompartment: GasCompartment;
+};
+
+/**
+ * A type representing the current state of tissue tension of inert gases in
+ *   a compartment
+ * @typedef TissueCompartment
+ * @property he - An object representing the tissue tension of helium in a
+ *   compartment
+ * @property n2 - An object representing the tissue tension of nitrogen in a
+ *   compartment
+ */
+type TissueCompartment = {
+  he: SampleTissue;
+  n2: SampleTissue;
+};
+
+/**
+ * A type representing a set of tissues keyed by the compartment number
+ * @typedef Tissues
+ * @property compartment - An object representing the current state of tissue
+ *   tension of inert gases in the associated compartment
+ */
+type Tissues = {
+  [compartment: string]: TissueCompartment;
+};
+
+/** A class representing a sample (a moment in time) during a dive */
 export default class Sample {
   depth: number;
   gasMix: GasMix;
@@ -30,13 +66,24 @@ export default class Sample {
   gradientFactor: GradientFactor;
   tissues: Tissues;
   ndl?: NDL;
-  ascentCeiling?: AscentCeiling;
 
+  /**
+   * Create a sample
+   * @constructor
+   * @param depth - The depth associated with the sample
+   * @param gasMix - The gas mix used during the interval ending in this sample
+   * @param gradientFactor - An object containing the high and low gradient
+   *   factor values
+   * @param time - The total elapsed time within the dive scope
+   * @param tissues - (optional) the pre-calculated tissues for this sample
+   */
   constructor({
-    time,
-    gasMix,
+    depth,
     gradientFactor,
-    ...args
+    gasMix,
+    gasSwitch,
+    time,
+    tissues,
   }: {
     depth: number;
     gasMix: GasMix;
@@ -44,10 +91,8 @@ export default class Sample {
     gasSwitch?: GasMix;
     gradientFactor: GradientFactor;
     tissues?: Tissues;
-    ndl?: NDL;
-    ascentCeiling?: AscentCeiling;
   }) {
-    Object.assign(this, { time, gradientFactor, gasMix, ...args });
+    Object.assign(this, { depth, gasMix, gasSwitch, gradientFactor, tissues });
 
     if (time === 0) {
       // all tissues fully saturated with air
@@ -71,6 +116,37 @@ export default class Sample {
     }
   }
 
+  /**
+   * The max ascent ceiling at the time of the sample
+   * @return An ascent ceiling object containg the depth and gas compartment or
+   *   null
+   */
+  ascentCeiling = (): AscentCeiling | null => {
+    const ascentCeiling = ZHL16B.reduce(
+      (maxAscentCeiling, gasCompartment) => {
+        const { compartment, inertGas } = gasCompartment;
+        const sampleTissue = this.tissues[compartment][inertGas];
+        const ascentCeiling = sampleTissue.ascentCeiling();
+
+        return maxAscentCeiling.depth < ascentCeiling
+          ? { depth: ascentCeiling, gasCompartment }
+          : maxAscentCeiling;
+      },
+      { depth: 0, gasCompartment: null },
+    );
+    return ascentCeiling.depth === 0 ? null : ascentCeiling;
+  };
+
+  /**
+   * Creates a new sample using the current sample as the previous sample
+   * @param depth - The depth associated with the next sample
+   * @param intervalTime - The time elapsed since this sample's time
+   * @param gasSwitch - The gasMix to switch to at the moment of the next sample
+   * @param usePreviousGFLowDepth - Whether to use a previously defined gradient
+   *   factor low depth, like when calculating decompression stups
+   * @param gradientFactor - An object containing the high and low gradient
+   *   factor values
+   */
   createNextSample = ({
     depth,
     intervalTime,
@@ -86,16 +162,13 @@ export default class Sample {
   }) => {
     const gasMix = this.gasSwitch || this.gasMix;
 
-    // the sample ndl and ceiling
-    let ndl: NDL, ceiling: AscentCeiling;
-
     const nextTissues = ZHL16B.reduce((tissues, gasCompartment) => {
       const { compartment, inertGas } = gasCompartment;
       tissues[compartment] = tissues[compartment] || {};
 
       const previousSampleTissue = this.tissues[compartment][inertGas];
 
-      const sampleTissue = new SampleTissue({
+      tissues[compartment][inertGas] = new SampleTissue({
         startTissuePressure: previousSampleTissue.pressure,
         gasMix,
         startDepth: this.depth,
@@ -106,23 +179,6 @@ export default class Sample {
         gfLowDepth: usePreviousGFLowDepth && previousSampleTissue.gfLowDepth,
       });
 
-      const ascentCeiling = sampleTissue.ascentCeiling();
-
-      // only calculate no stop time if there is no ascent ceiling
-      if (ascentCeiling === 0) {
-        const noStopTime = sampleTissue.noStopTime();
-
-        if (noStopTime !== 0 && (!ndl || noStopTime < ndl.value)) {
-          ndl = { value: noStopTime, gasCompartment };
-        }
-      } else if (!ceiling || ascentCeiling > ceiling.depth) {
-        ceiling = {
-          depth: ascentCeiling,
-          gasCompartment,
-        };
-      }
-
-      tissues[compartment][inertGas] = sampleTissue;
       return tissues;
     }, {});
 
@@ -132,14 +188,36 @@ export default class Sample {
       gasSwitch,
       time: this.time + intervalTime,
       tissues: nextTissues,
-      ndl,
-      ascentCeiling: ceiling,
       gradientFactor: gradientFactor || this.gradientFactor,
     });
   };
 
-  // time needed to wait at current depth to ascend without exceeding mvalues
-  stopTime = ({ targetDepth }: { targetDepth: number }) =>
+  /** Time one can wait at current depth before needing to ascend to surface
+   *    safely (without exceeding M-values)
+   *  @return object including that value and the leading gas compartment
+   */
+  noStopTime = (): NDL => {
+    const noStopTime = ZHL16B.reduce(
+      (minNoStopTime, gasCompartment) => {
+        const { compartment, inertGas } = gasCompartment;
+        const sampleTissue = this.tissues[compartment][inertGas];
+        const noStopTime = sampleTissue.noStopTime();
+
+        return minNoStopTime.value > noStopTime
+          ? { value: noStopTime, gasCompartment }
+          : minNoStopTime;
+      },
+      { value: Infinity, gasCompartment: null },
+    );
+    return noStopTime.value === Infinity ? null : noStopTime;
+  };
+
+  /** Time needed to wait at current depth in order to ascend to target depth
+   *    safely (without exceeding M-values)
+   *  @param targetDepth - next target depth
+   *  @return time in minutes
+   */
+  stopTime = ({ targetDepth }: { targetDepth: number }): number =>
     ZHL16B.reduce((maxStopTime, { compartment, inertGas }) => {
       const sampleTissue = this.tissues[compartment][inertGas];
       const stopTime = sampleTissue.stopTime({ targetDepth });
@@ -147,7 +225,10 @@ export default class Sample {
       return maxStopTime < stopTime ? stopTime : maxStopTime;
     }, 0);
 
-  tts = () => {
-    return tts({ sample: this, totalTime: 0 });
-  };
+  /** Time needed to ascend to the surface using the most effecient
+   *    decompression stops if at all necessary
+   *  @param targetDepth - next target depth
+   *  @return time in minutes
+   */
+  tts = (): number => tts({ sample: this, totalTime: 0 });
 }

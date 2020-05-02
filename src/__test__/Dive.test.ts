@@ -10,13 +10,13 @@ test('no previous dive', () => {
   // decend to 40 meters
   dive.addSample({ depth: 40, intervalTime: 2 });
 
-  let { lastSample } = dive;
+  let lastSample = dive.lastSample();
 
   // we can stay at 40 meters for ~10 minutes
-  expect(lastSample.ndl.value).toEqual(10.097413217365236);
+  expect(lastSample.noStopTime().value).toEqual(10.097413217365236);
 
   dive.addSample({ depth: 40, intervalTime: 28 });
-  lastSample = dive.lastSample;
+  lastSample = dive.lastSample();
 
   let strings = Object.values(lastSample.tissues).map(
     (t) =>
@@ -46,7 +46,7 @@ test('no previous dive', () => {
 
   dive.addSample({ depth: 9, intervalTime: (40 - 9) / MAX_ASCENT_RATE });
 
-  lastSample = dive.lastSample;
+  lastSample = dive.lastSample();
 
   strings = Object.values(lastSample.tissues).map(
     (t) =>

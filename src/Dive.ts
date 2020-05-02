@@ -21,6 +21,7 @@ export default class Dive {
 
   /**
    * Create a dive
+   * @constructor
    * @param surfaceInterval - The time since the previous dive in minutes
    *   (optional)
    * @param gases - The gases available during the dive

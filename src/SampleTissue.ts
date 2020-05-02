@@ -1,5 +1,4 @@
 import type GasCompartment from './GasCompartment';
-import { ATA } from './constants';
 import {
   ascentCeiling,
   ascentCeilingSolvedForPComp,
@@ -75,7 +74,7 @@ export default class SampleTissue {
     }
   }
 
-  noStopTime() {
+  noStopTime = (): number => {
     const { k, m0, inertGas } = this.gasCompartment;
     const gas = this.gasMix[inertGas];
 
@@ -109,7 +108,7 @@ export default class SampleTissue {
     });
 
     return noStopTime < 0 ? 0 : noStopTime;
-  }
+  };
 
   maxGradientFactor = (): number => {
     const { a, b } = this.gasCompartment;
@@ -147,7 +146,7 @@ export default class SampleTissue {
   };
 
   // time needed to wait at current depth to ascend without exceeding mvalues
-  stopTime = ({ targetDepth }): number => {
+  stopTime = ({ targetDepth }: { targetDepth: number }): number => {
     const { a, b, inertGas, k } = this.gasCompartment;
     const targetDepthPressure = ambientPressure(targetDepth);
     const gas = this.gasMix[inertGas];
