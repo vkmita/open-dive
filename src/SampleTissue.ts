@@ -52,10 +52,7 @@ export default class SampleTissue {
       pressure,
     });
 
-    if (!gfLowDepth) {
-    }
-
-    // pressure an be 0, !pressure is no bueno
+    // pressure can be 0, !pressure is no bueno
     if (pressure == null) {
       const { inertGas } = gasCompartment;
       const gas = gasMix[inertGas];
