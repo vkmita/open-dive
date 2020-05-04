@@ -1,4 +1,4 @@
-# dive-computer
-A dive computer for the web
+# Open dive
+An object-oriented representation of a dive that has many dive computer utilities
 
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
