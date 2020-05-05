@@ -13,34 +13,47 @@ import { MAX_ASCENT_RATE } from './constants';
 
 import type { GradientFactor } from './Dive';
 
-// associated with a Sample
+/** A class representing a tissue's relationship with an inert gas  */
 export default class SampleTissue {
   depth: number;
   gasMix: GasMix;
-  gasCompartment: GasCompartment; // GasCompartment
+  gasCompartment: GasCompartment;
   gradientFactor: GradientFactor;
   gfLowDepth: number;
   pressure: number;
 
+  /**
+   * Create a sample tissue
+   * @constructor
+   * @param endDepth The depth at the moment of the sample
+   * @param gasCompartment The gas compartment associated with the tissue
+   * @param gasMix The gas mix being breathed
+   * @param gfLowDepth The low depth to use for gradient factor calculations
+   * @param gradientFactor The gradient factors set for the dive
+   * @param intervalTime The time since the last sample
+   * @param pressure The pressure of the tissue
+   * @param startDepth The depth at the moment of the last sample
+   * @param startTissuePressure The pressure at the moment of the last sample
+   */
   constructor({
-    startTissuePressure, // bar
-    gasMix, // 0 - 1, ex: .79
-    gradientFactor,
-    startDepth, // meters
-    endDepth, // meters
-    intervalTime, // minutes
-    gasCompartment, // GasCompartment
+    endDepth,
+    gasCompartment,
+    gasMix,
     gfLowDepth,
+    gradientFactor,
+    intervalTime,
     pressure,
+    startDepth,
+    startTissuePressure,
   }: {
-    startTissuePressure?: number; // bar
-    gasMix: GasMix;
-    startDepth?: number;
     endDepth: number;
-    intervalTime?: number;
     gasCompartment: GasCompartment;
-    gradientFactor: GradientFactor;
+    gasMix: GasMix;
     gfLowDepth?: number;
+    gradientFactor: GradientFactor;
+    intervalTime?: number;
+    startDepth?: number;
+    startTissuePressure?: number;
     pressure?: number;
   }) {
     Object.assign(this, {
@@ -52,13 +65,11 @@ export default class SampleTissue {
       pressure,
     });
 
-    // pressure can be 0, !pressure is no bueno
     if (pressure == null) {
       const { inertGas } = gasCompartment;
       const gas = gasMix[inertGas];
 
       const R = gas.R({ startDepth, endDepth, time: intervalTime });
-      // meters / minute
       const startAlviolarPressure = gas.alveolarPressure({ depth: startDepth });
 
       this.pressure = schreiner({
@@ -71,6 +82,11 @@ export default class SampleTissue {
     }
   }
 
+  /**
+   * The time one can stay at the current depth until needing to ascend without
+   *   breaking M-values
+   * @returns number in minutes
+   */
   noStopTime = (): number => {
     const { k, m0, inertGas } = this.gasCompartment;
     const gas = this.gasMix[inertGas];
@@ -107,6 +123,10 @@ export default class SampleTissue {
     return noStopTime < 0 ? 0 : noStopTime;
   };
 
+  /**
+   * The max gradient factor for the current depth and tissue
+   * @returns A gradient factor for the current depth
+   */
   maxGradientFactor = (): number => {
     const { a, b } = this.gasCompartment;
     const pComp = this.pressure;
@@ -127,10 +147,13 @@ export default class SampleTissue {
     );
   };
 
+  /**
+   * The depth in which one can ascend to without breaking M-values
+   * @returns The depth in meters
+   */
   ascentCeiling = (): number => {
     const { a, b } = this.gasCompartment;
     const pComp = this.pressure;
-
     const gradientFactor = this.maxGradientFactor();
 
     const maxAscentPressure = ascentCeiling({ a, b, pComp, gradientFactor });
@@ -142,7 +165,11 @@ export default class SampleTissue {
     return Number(ambientPressureDepth(maxAscentPressure).toFixed(4));
   };
 
-  // time needed to wait at current depth to ascend without exceeding mvalues
+  /**
+   * Calculate time needed to wait at current depth to ascend to the target
+   *   depth without exceeding mvalues
+   * @returns The time in minutes
+   */
   stopTime = ({ targetDepth }: { targetDepth: number }): number => {
     const { a, b, inertGas, k } = this.gasCompartment;
     const targetDepthPressure = ambientPressure(targetDepth);

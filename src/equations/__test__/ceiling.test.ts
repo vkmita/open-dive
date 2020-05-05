@@ -44,7 +44,6 @@ describe('ascentCeiling', () => {
 });
 
 describe('help with tts', () => {
-  const tissuePressure = 3.1631432796773904;
   const pAmbTol = ambientPressure(9 - 3);
 
   const pComp = ascentCeilingSolvedForPComp({
