@@ -2,6 +2,9 @@ import { ambientPressure } from './equations/pressure';
 
 type InertGas = 'he' | 'n2';
 
+/**
+ * A class representing am individual inert gas's compartment
+ */
 export default class GasCompartment {
   inertGas: InertGas;
   compartment: 'string';
@@ -11,6 +14,13 @@ export default class GasCompartment {
   k: number;
   m0: number;
 
+  /**
+   * @constructor
+   * @param a The compartment's a value
+   * @param b The compartment's b value
+   * @param compartment The compartment's number
+   * @param halfTime The compartment's half time
+   */
   constructor({
     a,
     b,

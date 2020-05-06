@@ -1,10 +1,19 @@
 import Gas from './Gas';
 
+/**
+ * A class representing a mix of gases
+ */
 export default class GasMix {
   he: Gas;
   n2: Gas;
   o2: Gas;
 
+  /**
+   * Create a gas mix
+   * @constructor
+   * @param he The ratio of helium in the mix
+   * @param o2 The ratio of oxygen in the mix
+   */
   constructor({ he, o2 }: { he?: number; o2: number }) {
     const heRatio = he || 0;
     Object.assign(this, {

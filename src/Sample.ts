@@ -192,9 +192,10 @@ export default class Sample {
     });
   };
 
-  /** Time one can wait at current depth before needing to ascend to surface
-   *    safely (without exceeding M-values)
-   *  @return object including that value and the leading gas compartment
+  /**
+   * Time one can wait at current depth before needing to ascend to surface
+   *   safely (without exceeding M-values)
+   * @return object including that value and the leading gas compartment
    */
   noStopTime = (): NDL => {
     const noStopTime = ZHL16B.reduce(
@@ -212,10 +213,11 @@ export default class Sample {
     return noStopTime.value === Infinity ? null : noStopTime;
   };
 
-  /** Time needed to wait at current depth in order to ascend to target depth
-   *    safely (without exceeding M-values)
-   *  @param targetDepth - next target depth
-   *  @return time in minutes
+  /**
+   * Time needed to wait at current depth in order to ascend to target depth
+   *   safely (without exceeding M-values)
+   * @param targetDepth - next target depth
+   * @return time in minutes
    */
   stopTime = ({ targetDepth }: { targetDepth: number }): number =>
     ZHL16B.reduce((maxStopTime, { compartment, inertGas }) => {
@@ -225,10 +227,11 @@ export default class Sample {
       return maxStopTime < stopTime ? stopTime : maxStopTime;
     }, 0);
 
-  /** Time needed to ascend to the surface using the most effecient
-   *    decompression stops if at all necessary
-   *  @param targetDepth - next target depth
-   *  @return time in minutes
+  /**
+   * Time needed to ascend to the surface using the most effecient
+   *   decompression stops if at all necessary
+   * @param targetDepth - next target depth
+   * @return time in minutes
    */
   tts = (): number => tts({ sample: this, totalTime: 0 });
 }

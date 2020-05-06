@@ -2,6 +2,9 @@ import GasCompartment from './GasCompartment';
 
 type ZHL16B = Array<GasCompartment>;
 
+/**
+ * The Buhlmann ZHL16B gas compartments
+ */
 const ZHL16B: ZHL16B = [
   new GasCompartment({
     compartment: '1',

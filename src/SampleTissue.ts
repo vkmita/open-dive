@@ -13,7 +13,10 @@ import { MAX_ASCENT_RATE } from './constants';
 
 import type { GradientFactor } from './Dive';
 
-/** A class representing a tissue's relationship with an inert gas  */
+/**
+ * A class representing a tissue's relationship with an inert gas at the
+ * moment of a sample
+ */
 export default class SampleTissue {
   depth: number;
   gasMix: GasMix;
