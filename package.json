@@ -1,22 +1,25 @@
 {
-  "name": "dive-computer",
+  "name": "@vkmita/open-dive",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "An object orientated dive representation containing many dive computer functionalities",
+  "main": "built/Dive.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vkmita/dive-computer.git"
+    "url": "git+https://github.com/vkmita/open-dive.git"
   },
-  "author": "",
+  "author": "Victor Kmita",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/vkmita/dive-computer/issues"
+    "url": "https://github.com/vkmita/open-dive/issues"
   },
-  "homepage": "https://github.com/vkmita/dive-computer#readme",
+  "homepage": "https://github.com/vkmita/open-dive#readme",
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
     "@babel/plugin-transform-typescript": "^7.9.4",
     "@types/jest": "^25.2.1",
     "@types/lodash": "^4.14.150",
@@ -27,11 +30,6 @@
     "prettier": "2.0.4",
     "ts-jest": "^25.4.0",
     "typescript": "^3.8.3"
-  },
-  "dependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
-    "lodash": "^4.17.15"
   },
   "husky": {
     "hooks": {
