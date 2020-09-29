@@ -233,5 +233,5 @@ export default class Sample {
    * @param targetDepth - next target depth
    * @return time in minutes
    */
-  tts = (): number => tts({ sample: this, totalTime: 0 });
+  tts = (): number => tts(this);
 }
